@@ -1,6 +1,6 @@
-import 'dart:math';
 
 import 'package:path/path.dart';
+import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/movie_tables.dart';
 import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -32,6 +32,8 @@ class MovieDataBase {
       onCreate: (db, version) async {
         try {
           await db.execute(TableUserAccount.createTable);
+          await db.execute(TableMovie.createTable);
+          await db.execute(TableType.createTable);
 
         } on Exception catch (e, stack) {
           logInfo('Exception', e);
@@ -59,7 +61,9 @@ class MovieDataBase {
 
   Future<void> _upgradeToVersion1(Database db) async {
     try {
-    db.execute(TableUserAccount.createTable);
+      await db.execute(TableUserAccount.createTable);
+      await db.execute(TableMovie.createTable);
+      await db.execute(TableType.createTable);
 
 
     } on Exception catch (e, stack) {

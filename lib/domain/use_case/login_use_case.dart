@@ -20,5 +20,6 @@ class _LoginInterfaceUseCase implements LoginInterfaceUseCase {
       _repository.registerUser(userAccount);
 
   @override
-  Future<UserAccount?> getUser(UserAccount userAccount) => _repository.getUser(userAccount);
+  Future<UserAccount?> getUser(UserAccount userAccount) =>
+      _repository.getUser(userAccount);
 }

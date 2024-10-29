@@ -16,7 +16,7 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => const CinemaScreen(),
+        '/': (context) => const LoginScreen(),
         'cinema': (context) => const CinemaScreen(),
         'movie': (context) => const MovieScreen(),
       },
