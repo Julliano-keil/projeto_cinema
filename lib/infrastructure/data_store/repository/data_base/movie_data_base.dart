@@ -35,7 +35,7 @@ class MovieDataBase {
           await db.execute(TableMovie.createTable);
           await db.execute(TableType.createTable);
 
-        } on Exception catch (e, stack) {
+        } on Exception catch (e) {
           logInfo('Exception', e);
         }
 
@@ -50,7 +50,7 @@ class MovieDataBase {
             await _upgradeToVersion1(db);
           }
 
-        } on Exception catch (e, stack) {
+        } on Exception catch (e) {
           logInfo('Exception', e);
         }
       },
@@ -66,7 +66,7 @@ class MovieDataBase {
       await db.execute(TableType.createTable);
 
 
-    } on Exception catch (e, stack) {
+    } on Exception catch (e) {
       logInfo('Exception', e);
     }
   }

@@ -19,6 +19,7 @@ class Login extends StatelessWidget {
         '/': (context) => const LoginScreen(),
         'cinema': (context) => const CinemaScreen(),
         'movie': (context) => const MovieScreen(),
+        'seat_selection': (context) => const MovieScreen(),
       },
       initialRoute: '/',
     );

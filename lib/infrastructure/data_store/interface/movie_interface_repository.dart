@@ -1,7 +1,7 @@
+import '../../../domain/entities/movie.dart';
 
+abstract class MovieRepository {
+  Future<List<TypeMovie>> getTypeMovie();
 
-
-abstract class MovieRepository{
-
-
+  Future<List<Movie>> getMovie();
 }

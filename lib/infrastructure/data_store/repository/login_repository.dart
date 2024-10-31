@@ -1,6 +1,5 @@
 import 'package:projeto_cinema/domain/entities/user.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/login_tables.dart';
-import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../interface/login_interface_repository.dart';

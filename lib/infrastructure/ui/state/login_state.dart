@@ -11,7 +11,7 @@ class LoginState extends ChangeNotifier {
     _init();
   }
 
-   LoginInterfaceUseCase _useCase;
+   final LoginInterfaceUseCase _useCase;
 
   bool? _isRegister;
   bool _isRegistered = true;

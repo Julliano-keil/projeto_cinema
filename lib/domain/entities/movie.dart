@@ -1,12 +1,14 @@
 class Movie {
-  final String id;
+  final int id;
+  final int idType;
   final String title;
-  final DateTime date;
+  final String date;
   final String description;
   final List<String> showTimes;
 
   Movie({
     required this.id,
+    required this.idType,
     required this.title,
     required this.description,
     required this.showTimes,
@@ -16,11 +18,11 @@ class Movie {
 
 
 /// Entity representing a type with id and label.
-class TypeModel {
+class TypeMovie {
   final int id;
   final String label;
 
-  TypeModel({
+  TypeMovie({
     required this.id,
     required this.label,
   });

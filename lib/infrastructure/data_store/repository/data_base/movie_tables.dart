@@ -39,23 +39,14 @@ class TableMovie {
   static Map<String, dynamic> toMap(Movie movie) {
     return <String, dynamic>{
       id: movie.id,
+      typeId: movie.idType,
       title: movie.title,
-      date: movie.date.toIso8601String(),
+      date: movie.date,
       description: movie.description,
       showTimes: movie.showTimes.join(','), // Convert list to a comma-separated string
     };
   }
 
-  /// Convert a Map into a [Movie] object
-  static Movie fromMap(Map<String, dynamic> row) {
-    return Movie(
-      id: row[id].toString(),
-      title: row[title],
-      date: DateTime.parse(row[date]),
-      description: row[description],
-      showTimes: (row[showTimes] as String).split(','), // Convert back to a list
-    );
-  }
 }
 
 
@@ -73,22 +64,22 @@ class TableType {
   /// DDL to create the [Type] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
-    $id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    $id    INTEGER NOT NULL,
     $label TEXT NOT NULL
   );
   ''';
 
   /// Convert a [Type] object into a Map
-  static Map<String, dynamic> toMap(TypeModel type) {
+  static Map<String, dynamic> toMap(TypeMovie type) {
     return <String, dynamic>{
       id: type.id,
       label: type.label,
     };
   }
 
-  /// Convert a Map into a [TypeModel] object
-  static TypeModel fromMap(Map<String, dynamic> row) {
-    return TypeModel(
+  /// Convert a Map into a [TypeMovie] object
+  static TypeMovie fromMap(Map<String, dynamic> row) {
+    return TypeMovie(
       id: row[id],
       label: row[label],
     );
