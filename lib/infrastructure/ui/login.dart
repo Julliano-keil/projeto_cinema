@@ -5,6 +5,7 @@ import 'package:projeto_cinema/infrastructure/ui/util/text_form.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import ' seat_selection_screen.dart';
 import '../util/snack_bar.dart';
 import 'cinema_screen.dart';
 
@@ -15,11 +16,12 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => const LoginScreen(),
         'cinema': (context) => const CinemaScreen(),
         'movie': (context) => const MovieScreen(),
-        'seat_selection': (context) => const MovieScreen(),
+        'seat_selection': (context) => const SeatSeScreen(),
       },
       initialRoute: '/',
     );

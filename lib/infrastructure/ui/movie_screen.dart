@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import '../util/snack_bar.dart';
 
 class MovieScreen extends StatelessWidget {
-  const MovieScreen({super.key, });
-
-
+  const MovieScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +136,7 @@ class _ItemType extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               SizedBox(
-                height: 180,
+                height: 190,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: movies.length,
@@ -165,7 +165,7 @@ class _ItemType extends StatelessWidget {
                             },
                             child: Container(
                               width: 120,
-                              height: 140,
+                              height: 145,
                               color: Colors.grey[300],
                               child: Column(
                                 children: [
@@ -200,11 +200,17 @@ class _ItemType extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(
-                            movie.title,
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.white),
-                            overflow: TextOverflow.ellipsis,
+                          SizedBox(
+                            width: 110,
+                            child: Text(
+                              movie.title,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -272,6 +278,7 @@ class _ModalHours extends StatelessWidget {
                     ),
                     child: Text(
                       'Descrição: ${movie.description}',
+                      maxLines: 2,
                       style: const TextStyle(
                         fontSize: 18,
                         color: Colors.white,
@@ -297,6 +304,7 @@ class _ModalHours extends StatelessWidget {
                       itemCount: movie.showTimes.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
+
                         final time = movie.showTimes[index];
 
                         return InkWell(
@@ -341,10 +349,14 @@ class _ModalHours extends StatelessWidget {
                                 const EdgeInsets.symmetric(horizontal: 16.0),
                             child: InkWell(
                               onTap: () async {
-                                snackBarDefault(
-                                    context: context,
-                                    severity: SnackBarSeverity.success,
-                                    message: 'Cadastrado com succeso');
+                                Navigator.pushNamed(
+                                  context,
+                                  'seat_selection',
+                                  arguments: DetailArguments(
+                                    movie:movie,
+                                    hours: state.hours ?? '',
+                                  ),
+                                );
                               },
                               child: Container(
                                 height: 35,

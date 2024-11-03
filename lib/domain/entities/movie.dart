@@ -27,3 +27,11 @@ class TypeMovie {
     required this.label,
   });
 }
+
+
+class DetailArguments {
+  final Movie movie;
+  final String hours;
+
+  DetailArguments({required this.movie, required this.hours});
+}
