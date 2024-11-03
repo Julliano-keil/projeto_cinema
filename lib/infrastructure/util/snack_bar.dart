@@ -72,7 +72,7 @@ enum SnackBarSeverity {
 
     return switch (this) {
       error => Colors.red,
-      warning => Colors.red,
+      warning => Colors.orange.shade400,
       success => Colors.green,
     };
   }
@@ -81,7 +81,7 @@ enum SnackBarSeverity {
   Color getColorIcon() {
     return switch (this) {
       error => Colors.red,
-      warning => Colors.red,
+      warning => Colors.white,
       success => Colors.white,
     };
   }

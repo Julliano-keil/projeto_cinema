@@ -23,6 +23,9 @@ class TableMovie {
   /// Show times column 'show times' (text, stores JSON-encoded list of times)
   static const showTimes = 'show_times';
 
+  /// Show times column 'show times' (text, stores JSON-encoded list of times)
+  static const showSeat = 'show_seat';
+
   /// DDL to create the [Movie] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
@@ -31,7 +34,8 @@ class TableMovie {
     $title       TEXT NOT NULL DEFAULT '',
     $date        TEXT NOT NULL DEFAULT '',
     $description TEXT NOT NULL DEFAULT '',
-    $showTimes   TEXT NOT NULL DEFAULT ''
+    $showTimes   TEXT NOT NULL DEFAULT '',
+    $showSeat   TEXT NOT NULL DEFAULT ''
   );
   ''';
 
@@ -85,6 +89,65 @@ class TableType {
     );
   }
 }
+
+/// Ticket table definitions
+class TableTicket {
+  /// Table name 'ticket'
+  static const tableName = 'ticket';
+
+  /// ID column 'id' (integer, primary key)
+  static const id = 'id';
+
+  /// Type column 'type' (text)
+  static const type = 'type';
+
+  /// Price column 'price' (real)
+  static const price = 'price';
+
+  /// Seat column 'seat' (text)
+  static const seat = 'seat';
+
+  /// Movie Name column 'movieName' (text)
+  static const movieName = 'movieName';
+
+  /// Hours column 'hours' (text)
+  static const hours = 'hours';
+
+  /// DDL to create the [Ticket] table
+  static const createTable = '''
+  CREATE TABLE IF NOT EXISTS $tableName (
+    $id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    $type         TEXT NOT NULL DEFAULT '',
+    $price        INTEGER NOT NULL DEFAULT 0,
+    $seat         TEXT NOT NULL DEFAULT '',
+    $movieName    TEXT NOT NULL DEFAULT '',
+    $hours        TEXT NOT NULL DEFAULT ''
+  );
+  ''';
+
+  /// Convert a [Ticket] object into a Map
+  static Map<String, dynamic> toMap(SelectPriceMovie ticket) {
+    return <String, dynamic>{
+      type: ticket.type,
+      price: ticket.price,
+      seat: ticket.seat,
+      movieName: ticket.movieName,
+      hours: ticket.hours,
+    };
+  }
+
+  /// Convert a Map into a [Ticket] object
+  static SelectPriceMovie fromMap(Map<String, dynamic> row) {
+    return SelectPriceMovie(    type: row[type],
+      price: row[price],
+      seat: row[seat],
+      movieName: row[movieName],
+      hours: row[hours],
+    );
+  }
+}
+
+
 
 
 

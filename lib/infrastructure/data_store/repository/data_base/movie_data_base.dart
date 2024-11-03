@@ -10,7 +10,7 @@ import 'login_tables.dart';
 class MovieDataBase {
   Future<Database>? _db;
 
-  static const int _version = 1;
+  static const int _version = 2;
 
 
 
@@ -34,6 +34,7 @@ class MovieDataBase {
           await db.execute(TableUserAccount.createTable);
           await db.execute(TableMovie.createTable);
           await db.execute(TableType.createTable);
+          await db.execute(TableTicket.createTable);
 
         } on Exception catch (e) {
           logInfo('Exception', e);
@@ -45,9 +46,13 @@ class MovieDataBase {
        logInfo('Data base','Upgrading database from $oldVersion to $newVersion');
 
         try {
+          if (oldVersion < 1) {
+            logInfo('Upgrade to version 1', newVersion);
+            await _upgradeToVersion1(db);
+          }
           if (oldVersion < 2) {
             logInfo('Upgrade to version 2', newVersion);
-            await _upgradeToVersion1(db);
+            await _upgradeToVersion2(db);
           }
 
         } on Exception catch (e) {
@@ -59,6 +64,15 @@ class MovieDataBase {
   }
 
 
+  Future<void> _upgradeToVersion2(Database db) async {
+    try {
+      await db.execute(TableTicket.createTable);
+
+
+    } on Exception catch (e) {
+      logInfo('Exception', e);
+    }
+  }
   Future<void> _upgradeToVersion1(Database db) async {
     try {
       await db.execute(TableUserAccount.createTable);

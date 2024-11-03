@@ -1,10 +1,6 @@
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/movie_tables.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../interface/movie_interface_repository.dart';
@@ -23,71 +19,86 @@ class _MovieRepository implements MovieRepository {
 
   @override
   Future<List<Movie>> getMovie() async {
-
     final db = await _movieData.getDatabase();
 
-
-//     db.insert(TableMovie.tableName,
-//     {
-//       TableMovie.typeId: 1,
-//       TableMovie.title: 'Um maluco no pedaço',
-//       TableMovie.description: 'comedia',
-//       TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//       TableMovie.date: '23/02/2024',
-//     }
-// ,
-// conflictAlgorithm: ConflictAlgorithm.replace,    );
-//     db.insert(TableMovie.tableName,
-//         {
-//           TableMovie.typeId: 2,
-//           TableMovie.title: 'O grito',
-//           TableMovie.description: 'terror',
-//           TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//           TableMovie.date: '23/02/2024',
-//         },
-//         conflictAlgorithm: ConflictAlgorithm.replace,
-//     );
-//     db.insert(TableMovie.tableName,
-//         {
-//           TableMovie.typeId: 3,
-//           TableMovie.title: 'Homem aranha',
-//           TableMovie.description: 'filme de açao',
-//           TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//           TableMovie.date: '23/02/2024',
-//         },
-//         conflictAlgorithm: ConflictAlgorithm.replace,
-//     );
-//     db.insert(TableMovie.tableName,
-//         {
-//           TableMovie.typeId: 3,
-//           TableMovie.title: 'Planeta dos macacos',
-//           TableMovie.description: 'filme de açao',
-//           TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//           TableMovie.date: '23/02/2024',
-//         },
-//         conflictAlgorithm: ConflictAlgorithm.replace,
-//     );
-//     db.insert(TableMovie.tableName,
-//         {
-//           TableMovie.typeId: 2,
-//           TableMovie.title: 'A Frera',
-//           TableMovie.description: 'filme de terror',
-//           TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//           TableMovie.date: '23/02/2024',
-//         },
-//         conflictAlgorithm: ConflictAlgorithm.replace,
-//     );
-//     db.insert(TableMovie.tableName,
-//         {
-//           TableMovie.typeId: 1,
-//           TableMovie.title: 'Gente grande',
-//           TableMovie.description: 'comedia',
-//           TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-//           TableMovie.date: '23/02/2024',
-//         },
-//         conflictAlgorithm: ConflictAlgorithm.replace,
-//     );
-
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 1,
+    //     TableMovie.title: 'Um maluco no pedaço',
+    //     TableMovie.description: 'comedia',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 2,
+    //     TableMovie.title: 'O grito',
+    //     TableMovie.description: 'terror',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 3,
+    //     TableMovie.title: 'Homem aranha',
+    //     TableMovie.description: 'filme de açao',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 3,
+    //     TableMovie.title: 'Planeta dos macacos',
+    //     TableMovie.description: 'filme de açao',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 2,
+    //     TableMovie.title: 'A Frera',
+    //     TableMovie.description: 'filme de terror',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
+    // db.insert(
+    //   TableMovie.tableName,
+    //   {
+    //     TableMovie.typeId: 1,
+    //     TableMovie.title: 'Gente grande',
+    //     TableMovie.description: 'comedia',
+    //     TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+    //     TableMovie.showSeat:
+    //         'A1,A2 ,A3, B1,B2 ,B6, F1,F2,G4,G8,I5,I8,L9,F8,D1,D4,D6,C8,C5,C6,J1,J3,J6,J8,H1,H3,H6,H9,E3,E6,E9,E4,G6,G10,G1,A9,A6,A7',
+    //     TableMovie.date: '23/02/2024',
+    //   },
+    //   conflictAlgorithm: ConflictAlgorithm.replace,
+    // );
 
     var query = '''
     SELECT ${TableMovie.id}            as id,
@@ -95,16 +106,20 @@ class _MovieRepository implements MovieRepository {
     ${TableMovie.description}          as description,
     ${TableMovie.date}                 as date,
     ${TableMovie.title}                as title,
+    ${TableMovie.showSeat}             as seat,
     ${TableMovie.showTimes}            as show_times
     FROM ${TableMovie.tableName} 
     ''';
 
     final result = await db.rawQuery(query);
 
+    logInfo('ÇÇÇ', result);
+
     final listMovie = <Movie>[];
 
     for (final item in result) {
       final listString = item['show_times'] as String;
+      final listSeat = item['seat'] as String;
 
       listMovie.add(
         Movie(
@@ -114,6 +129,7 @@ class _MovieRepository implements MovieRepository {
           description: item['description'] as String,
           date: item['date'] as String,
           showTimes: listString.split(','),
+          showSeat: listSeat.split(','),
         ),
       );
     }
@@ -124,31 +140,32 @@ class _MovieRepository implements MovieRepository {
   @override
   Future<List<TypeMovie>> getTypeMovie() async {
     final db = await _movieData.getDatabase();
-
     //
-    // db.insert(TableType.tableName,
-    //     {
-    //       TableType.id: 1,
-    //       TableType.label: 'Comedia',
-    //     },
+    // db.insert(
+    //   TableType.tableName,
+    //   {
+    //     TableType.id: 1,
+    //     TableType.label: 'Comedia',
+    //   },
     //   conflictAlgorithm: ConflictAlgorithm.replace,
     // );
-    // db.insert(TableType.tableName,
-    //     {
-    //       TableType.id: 2,
-    //       TableType.label: 'Terror',
-    //     },
+    // db.insert(
+    //   TableType.tableName,
+    //   {
+    //     TableType.id: 2,
+    //     TableType.label: 'Terror',
+    //   },
     //   conflictAlgorithm: ConflictAlgorithm.replace,
     // );
     //
-    // db.insert(TableType.tableName,
-    //     {
-    //       TableType.id: 3,
-    //       TableType.label: 'Ação',
-    //     },
+    // db.insert(
+    //   TableType.tableName,
+    //   {
+    //     TableType.id: 3,
+    //     TableType.label: 'Ação',
+    //   },
     //   conflictAlgorithm: ConflictAlgorithm.replace,
     // );
-
 
     var query = '''
     SELECT ${TableType.id} as id,
@@ -170,5 +187,17 @@ class _MovieRepository implements MovieRepository {
     }
 
     return listTypeMovie;
+  }
+
+  @override
+  Future<void> insertTicket(SelectPriceMovie? selectPriceMovie) async {
+    final db = await _movieData.getDatabase();
+
+    db.insert(
+        TableTicket.tableName,
+        TableTicket.toMap(
+          selectPriceMovie ?? SelectPriceMovie(),
+        ),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 }
