@@ -16,10 +16,7 @@ class SeatSeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments =
-    ModalRoute
-        .of(context)!
-        .settings
-        .arguments as DetailArguments;
+        ModalRoute.of(context)!.settings.arguments as DetailArguments;
 
     final movie = arguments.movie;
     final hoursMovie = arguments.hours;
@@ -58,12 +55,10 @@ class _SelectSeat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SeatSelectionState>(
-      create: (context) =>
-          SeatSelectionState(
-              movieUseCase: Provider.of(context, listen: false),
-              hours: hoursMovie,
-              movie: movie
-          ),
+      create: (context) => SeatSelectionState(
+          movieUseCase: Provider.of(context, listen: false),
+          hours: hoursMovie,
+          movie: movie),
       child: Column(
         children: [
           _InfoMovie(
@@ -117,24 +112,24 @@ class _SelectPrice extends StatelessWidget {
             child: InkWell(
               onTap: state.seat == null
                   ? () {
-                snackBarDefault(
-                  context: context,
-                  severity: SnackBarSeverity.warning,
-                  message: 'Selecione um acento',
-                );
-              }
+                      snackBarDefault(
+                        context: context,
+                        severity: SnackBarSeverity.warning,
+                        message: 'Selecione um acento',
+                      );
+                    }
                   : () async {
-                showModalBottomSheet(
-                  backgroundColor: Colors.black,
-                  context: context,
-                  builder: (context) {
-                    return ChangeNotifierProvider.value(
-                      value: state,
-                      child: const _ModalPrice(),
-                    );
-                  },
-                );
-              },
+                      showModalBottomSheet(
+                        backgroundColor: Colors.black,
+                        context: context,
+                        builder: (context) {
+                          return ChangeNotifierProvider.value(
+                            value: state,
+                            child: const _ModalPrice(),
+                          );
+                        },
+                      );
+                    },
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
@@ -236,11 +231,10 @@ class _ModalPrice extends StatelessWidget {
                                   top: 16.0, left: 8.0, bottom: 16.0),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Finalizar pagamento de : R\$ ${item
-                                        ?.price}',
+                                    'Finalizar pagamento de : R\$ ${item?.price}',
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   Padding(
@@ -248,8 +242,16 @@ class _ModalPrice extends StatelessWidget {
                                         horizontal: 16.0),
                                     child: InkWell(
                                       onTap: () async {
-                                        _showPaymentDialog(
-                                            context, state.selectPriceMovie);
+                                        final pop = await _showPaymentDialog(
+                                            context, state.selectPriceMovie,
+                                        state
+                                        );
+                                        if(pop ?? false) {
+                                          Navigator.of(context).pushNamedAndRemoveUntil(
+                                            'movie',
+                                                (Route<dynamic> route) => false,
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         height: 35,
@@ -293,10 +295,9 @@ class _ModalPrice extends StatelessWidget {
   }
 }
 
-void _showPaymentDialog(BuildContext context,
-    SelectPriceMovie? selectPriceMovie) {
-  final state = Provider.of<SeatSelectionState>(context);
-  showDialog(
+Future<bool?> _showPaymentDialog(
+    BuildContext context, SelectPriceMovie? selectPriceMovie,SeatSelectionState state) {
+ return showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -342,20 +343,19 @@ void _showPaymentDialog(BuildContext context,
                 color: Colors.white,
                 fontSize: 18,
               ),
-            ), Text(
+            ),
+            Text(
               "Data: ${selectPriceMovie?.hours}",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
               ),
             ),
-
           ],
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             const Text(
               "Escaneie para pagar",
               style: TextStyle(
@@ -363,6 +363,7 @@ void _showPaymentDialog(BuildContext context,
                 fontSize: 18,
               ),
             ),
+            if(!(state.isLoad ?? false))
             Image.network(
               'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1024px-QR_code_for_mobile_English_Wikipedia.svg.png',
               // Link para uma imagem QR code de exemplo
@@ -370,17 +371,23 @@ void _showPaymentDialog(BuildContext context,
               width: 150,
               color: Colors.white,
             ),
+            if((state.isLoad ?? false))
+              const CircularProgressIndicator(
+                color: Colors.red,
+              ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: InkWell(
                 onTap: () {
-                  state.insertTicket
+                  state.insertTicket();
 
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/home',
-                        (Route<dynamic> route) => false,
-                  );
+                  snackBarDefault(
+                      context: context,
+                      severity: SnackBarSeverity.success,
+                      message: 'Pagamento efetuado com sucesso');
+
+                  Navigator.of(context).pop(true);
                 },
                 child: Container(
                   height: 35,
@@ -408,6 +415,7 @@ void _showPaymentDialog(BuildContext context,
       );
     },
   );
+
 }
 
 class _ItemSelectPrice extends StatelessWidget {
@@ -436,8 +444,7 @@ class _ItemSelectPrice extends StatelessWidget {
               type: type,
               seat: state.seat,
               hours: '${state.movie.date} ${state.hours}',
-              movieName: state.movie.title
-          );
+              movieName: state.movie.title);
         },
         child: Stack(
           children: [
@@ -591,9 +598,9 @@ class _SeatsItemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String> rows =
-    List.generate(10, (index) => String.fromCharCode(65 + index)); // A-J
+        List.generate(10, (index) => String.fromCharCode(65 + index)); // A-J
     final List<String> columns =
-    List.generate(10, (index) => (index + 1).toString()); // 1-10
+        List.generate(10, (index) => (index + 1).toString()); // 1-10
 
     final List<String> seats = [
       for (var row in rows)
@@ -648,15 +655,15 @@ class SeatTile extends StatelessWidget {
 
     var color = (isExistSeat ?? false)
         ? (isSelected ?? false)
-        ? Colors.blue
-        : Colors.grey[300]
+            ? Colors.blue
+            : Colors.grey[300]
         : Colors.red;
 
     return InkWell(
       onTap: (isExistSeat ?? false)
           ? () {
-        state.seat = label;
-      }
+              state.seat = label;
+            }
           : null,
       child: Container(
         decoration: BoxDecoration(
@@ -794,8 +801,7 @@ class _InfoMovie extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Voce escolheu o filme ${movie
-                        .title} para o horario das $hoursMovie',
+                    'Voce escolheu o filme ${movie.title} para o horario das $hoursMovie',
                     maxLines: 3,
                     style: const TextStyle(
                       color: Colors.white,
