@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/seat_selection_state.dart';
-import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:projeto_cinema/infrastructure/util/snack_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -243,13 +241,14 @@ class _ModalPrice extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () async {
                                         final pop = await _showPaymentDialog(
-                                            context, state.selectPriceMovie,
-                                        state
-                                        );
-                                        if(pop ?? false) {
-                                          Navigator.of(context).pushNamedAndRemoveUntil(
+                                            context,
+                                            state.selectPriceMovie,
+                                            state);
+                                        if (pop ?? false) {
+                                          Navigator.of(context)
+                                              .pushNamedAndRemoveUntil(
                                             'movie',
-                                                (Route<dynamic> route) => false,
+                                            (Route<dynamic> route) => false,
                                           );
                                         }
                                       },
@@ -295,9 +294,9 @@ class _ModalPrice extends StatelessWidget {
   }
 }
 
-Future<bool?> _showPaymentDialog(
-    BuildContext context, SelectPriceMovie? selectPriceMovie,SeatSelectionState state) {
- return showDialog<bool>(
+Future<bool?> _showPaymentDialog(BuildContext context,
+    SelectPriceMovie? selectPriceMovie, SeatSelectionState state) {
+  return showDialog<bool>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -363,15 +362,15 @@ Future<bool?> _showPaymentDialog(
                 fontSize: 18,
               ),
             ),
-            if(!(state.isLoad ?? false))
-            Image.network(
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1024px-QR_code_for_mobile_English_Wikipedia.svg.png',
-              // Link para uma imagem QR code de exemplo
-              height: 150,
-              width: 150,
-              color: Colors.white,
-            ),
-            if((state.isLoad ?? false))
+            if (!(state.isLoad ?? false))
+              Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1024px-QR_code_for_mobile_English_Wikipedia.svg.png',
+                // Link para uma imagem QR code de exemplo
+                height: 150,
+                width: 150,
+                color: Colors.white,
+              ),
+            if ((state.isLoad ?? false))
               const CircularProgressIndicator(
                 color: Colors.red,
               ),
@@ -415,7 +414,6 @@ Future<bool?> _showPaymentDialog(
       );
     },
   );
-
 }
 
 class _ItemSelectPrice extends StatelessWidget {

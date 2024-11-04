@@ -72,11 +72,13 @@ class SeatSelectionState extends ChangeNotifier {
   Future<void> insertTicket() async {
 
     _isLoad = true;
+    notifyListeners();
 
     _movieUseCase.insertTicket(selectPriceMovie);
 
     Future.delayed(const Duration(seconds: 4));
 
     _isLoad = false;
+    notifyListeners();
   }
 }
