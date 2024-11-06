@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/seat_selection_state.dart';
 import 'package:projeto_cinema/infrastructure/util/snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -438,6 +439,7 @@ class _ItemSelectPrice extends StatelessWidget {
         onTap: () {
           state.index = index;
           state.selectPriceMovie = SelectPriceMovie(
+            movie: state.movie,
               price: price,
               type: type,
               seat: state.seat,
@@ -822,24 +824,3 @@ class _InfoMovie extends StatelessWidget {
   }
 }
 
-extension on Widget {
-  Animate animate1() {
-    return animate(
-      autoPlay: true,
-    ).slide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      begin: const Offset(2, 0),
-    );
-  }
-
-  Animate animate2() {
-    return animate(
-      autoPlay: true,
-    ).slide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      begin: const Offset(0, 1),
-    );
-  }
-}

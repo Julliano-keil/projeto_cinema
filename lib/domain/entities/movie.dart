@@ -43,10 +43,14 @@ class SelectPriceMovie {
     this.seat,
     this.movieName,
     this.hours,
+    this.movie,
+    this.id,
   });
 
+  final int? id;
   final String? type;
   final double? price;
+  final Movie? movie;
   final String? seat;
   final String? movieName;
   final String? hours;

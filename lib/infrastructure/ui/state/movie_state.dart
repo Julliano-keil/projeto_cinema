@@ -38,7 +38,6 @@ final _listMovie = <Movie>[];
 
   Future<void> getListType()async{
     final list = await _movieUseCase.getTypeMovie();
-    logInfo('ÇÇÇ',list.length);
     _listType..clear()..addAll(list);
 
     notifyListeners();
@@ -48,7 +47,6 @@ final _listMovie = <Movie>[];
   Future<void> getListMovie()async{
     final list = await _movieUseCase.getMovie();
 
-    logInfo('ÇÇÇ',list.length);
 
     _listMovie..clear()..addAll(list);
     notifyListeners();

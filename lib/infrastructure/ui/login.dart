@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_cinema/infrastructure/ui/movie_screen.dart';
+import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
 import 'package:projeto_cinema/infrastructure/ui/util/text_form.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class Login extends StatelessWidget {
         'cinema': (context) => const CinemaScreen(),
         'movie': (context) => const MovieScreen(),
         'seat_selection': (context) => const SeatSeScreen(),
+        'my_tickets': (context) => const MyTickets(),
       },
       initialRoute: '/',
     );
@@ -341,34 +343,4 @@ class _FormUser extends StatelessWidget {
   }
 }
 
-extension on Widget {
-  Animate animate1() {
-    return animate(
-      autoPlay: true,
-    ).slide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      begin: const Offset(0, 1),
-    );
-  }
 
-  Animate animate2() {
-    return animate(
-      autoPlay: true,
-    ).slide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      begin: const Offset(1, 2),
-    );
-  }
-
-  Animate animate3() {
-    return animate(
-      autoPlay: true,
-    ).slide(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      begin: const Offset(1, 2),
-    );
-  }
-}

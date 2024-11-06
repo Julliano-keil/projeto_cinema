@@ -25,4 +25,7 @@ class _MovieUseCase implements MovieUseCase {
   @override
   Future<void> insertTicket(SelectPriceMovie? selectPriceMovie) =>
       _repository.insertTicket(selectPriceMovie);
+
+  @override
+  Future<List<SelectPriceMovie>> getMyTickets() => _repository.getMyTickets();
 }

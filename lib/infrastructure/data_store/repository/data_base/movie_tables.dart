@@ -35,7 +35,8 @@ class TableMovie {
     $date        TEXT NOT NULL DEFAULT '',
     $description TEXT NOT NULL DEFAULT '',
     $showTimes   TEXT NOT NULL DEFAULT '',
-    $showSeat   TEXT NOT NULL DEFAULT ''
+    $showSeat   TEXT NOT NULL DEFAULT '' ,
+    UNIQUE($id)
   );
   ''';
 
@@ -69,7 +70,8 @@ class TableType {
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
     $id    INTEGER NOT NULL,
-    $label TEXT NOT NULL
+    $label TEXT NOT NULL,
+    UNIQUE($label) 
   );
   ''';
 

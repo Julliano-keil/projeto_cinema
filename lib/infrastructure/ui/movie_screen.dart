@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/movie_state.dart';
 import 'package:projeto_cinema/infrastructure/ui/util/text_form.dart';
+import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:provider/provider.dart';
-
-import '../util/snack_bar.dart';
 
 class MovieScreen extends StatelessWidget {
   const MovieScreen({
@@ -24,6 +22,18 @@ class MovieScreen extends StatelessWidget {
             backgroundColor: Colors.black,
             centerTitle: true,
             actions: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    'my_tickets',
+                  );
+                },
+                icon: const Icon(
+                  Icons.confirmation_num_outlined,
+                  color: Colors.white,
+                ),
+              ),
               IconButton(
                   onPressed: () {
                     showModalBottomSheet(
@@ -304,7 +314,6 @@ class _ModalHours extends StatelessWidget {
                       itemCount: movie.showTimes.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-
                         final time = movie.showTimes[index];
 
                         return InkWell(
@@ -353,7 +362,7 @@ class _ModalHours extends StatelessWidget {
                                   context,
                                   'seat_selection',
                                   arguments: DetailArguments(
-                                    movie:movie,
+                                    movie: movie,
                                     hours: state.hours ?? '',
                                   ),
                                 );
