@@ -48,7 +48,7 @@ class TableMovie {
       title: movie.title,
       date: movie.date,
       description: movie.description,
-      showTimes: movie.showTimes.join(','), // Convert list to a comma-separated string
+      showTimes: movie.showTimes?.join(','), // Convert list to a comma-separated string
     };
   }
 
@@ -100,6 +100,9 @@ class TableTicket {
   /// ID column 'id' (integer, primary key)
   static const id = 'id';
 
+  /// ID column 'id' (integer, primary key)
+  static const movieId = 'movie_id';
+
   /// Type column 'type' (text)
   static const type = 'type';
 
@@ -108,6 +111,9 @@ class TableTicket {
 
   /// Seat column 'seat' (text)
   static const seat = 'seat';
+
+  /// Seat column 'seat' (text)
+  static const reimbursement = 'reimbursement';
 
   /// Movie Name column 'movieName' (text)
   static const movieName = 'movieName';
@@ -118,12 +124,14 @@ class TableTicket {
   /// DDL to create the [Ticket] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
-    $id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    $type         TEXT NOT NULL DEFAULT '',
-    $price        INTEGER NOT NULL DEFAULT 0,
-    $seat         TEXT NOT NULL DEFAULT '',
-    $movieName    TEXT NOT NULL DEFAULT '',
-    $hours        TEXT NOT NULL DEFAULT ''
+    $id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+    $type                 TEXT NOT NULL DEFAULT '',
+    $price                INTEGER NOT NULL DEFAULT 0,
+    $movieId              INTEGER NOT NULL DEFAULT 0,
+    $reimbursement        INTEGER NOT NULL DEFAULT 0,
+    $seat                 TEXT NOT NULL DEFAULT '',
+    $movieName            TEXT NOT NULL DEFAULT '',
+    $hours                TEXT NOT NULL DEFAULT ''
   );
   ''';
 
@@ -132,6 +140,8 @@ class TableTicket {
     return <String, dynamic>{
       type: ticket.type,
       price: ticket.price,
+      movieId: ticket.movieId,
+      reimbursement: ticket.reimbursement,
       seat: ticket.seat,
       movieName: ticket.movieName,
       hours: ticket.hours,

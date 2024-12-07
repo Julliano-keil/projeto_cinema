@@ -139,31 +139,7 @@ class _MovieRepository implements MovieRepository {
   Future<List<TypeMovie>> getTypeMovie() async {
     final db = await _movieData.getDatabase();
 
-    // db.insert(
-    //   TableType.tableName,
-    //   {
-    //     TableType.id: 1,
-    //     TableType.label: 'Comedia',
-    //   },
-    //   conflictAlgorithm: ConflictAlgorithm.replace,
-    // );
-    // db.insert(
-    //   TableType.tableName,
-    //   {
-    //     TableType.id: 2,
-    //     TableType.label: 'Terror',
-    //   },
-    //   conflictAlgorithm: ConflictAlgorithm.replace,
-    // );
-    //
-    // db.insert(
-    //   TableType.tableName,
-    //   {
-    //     TableType.id: 3,
-    //     TableType.label: 'Ação',
-    //   },
-    //   conflictAlgorithm: ConflictAlgorithm.replace,
-    // );
+
 
     var query = '''
     SELECT ${TableType.id} as id,
@@ -228,6 +204,8 @@ class _MovieRepository implements MovieRepository {
     ${TableTicket.hours} as hours,
     ${TableTicket.movieName} as movie_name,
     ${TableTicket.price} as price,
+    ${TableTicket.reimbursement} as reimbursement,
+    ${TableTicket.movieId} as movie_id,
     ${TableTicket.type} as type
     FROM ${TableTicket.tableName} 
     ''';
@@ -239,12 +217,13 @@ class _MovieRepository implements MovieRepository {
     for (final item in result) {
       final price = (item['price'].toString());
 
-      logInfo('ÇÇÇ1', price);
       listMyTickets.add(
         SelectPriceMovie(
           id: item['id'] as int,
+          movieId: item['movie_id'] as int,
           type: item['type'] as String,
           price: double.parse(price),
+          reimbursement: item['reimbursement'] == 1,
           movieName: item['movie_name'] as String,
           hours: item['hours'] as String,
           seat: item['seat'] as String,
@@ -253,5 +232,95 @@ class _MovieRepository implements MovieRepository {
     }
 
     return listMyTickets;
+  }
+
+  @override
+  Future<void> solicitationReimbursement(
+      SelectPriceMovie selectPriceMovie) async {
+    final db = await _movieData.getDatabase();
+
+    db.update(
+      TableTicket.tableName,
+      {
+        TableTicket.reimbursement: 1,
+      },
+      where: '${TableTicket.id} = ?',
+      whereArgs: [selectPriceMovie.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    var query = '''
+    SELECT ${TableMovie.id}            as id,
+    ${TableMovie.showSeat}             as seat,
+    ${TableMovie.showTimes}            as show_times
+    FROM ${TableMovie.tableName} 
+    WHERE ${TableMovie.id} = ${selectPriceMovie.movieId};
+    ''';
+
+    final result = await db.rawQuery(query);
+
+    final listMovie = <Movie>[];
+
+    for (final item in result) {
+      final listString = item['show_times'] as String;
+      final listSeat = item['seat'] as String;
+
+      listMovie.add(
+        Movie(
+          id: item['id'] as int,
+          showTimes: listString.split(','),
+          showSeat: listSeat.split(','),
+        ),
+      );
+    }
+
+    var string;
+
+    for (final (index, item) in listMovie.indexed) {
+      final listStr = <String>[];
+
+      final list = (item.showSeat);
+
+      list?.insert(index, selectPriceMovie.seat ?? '');
+
+      listStr.addAll(list ?? []);
+
+      string = listStr.join(',');
+    }
+
+    db.update(
+        TableMovie.tableName,
+        {
+          TableMovie.showSeat: string,
+        },
+        where: '${TableMovie.id} = ?',
+        whereArgs: [selectPriceMovie.movieId],
+        conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  @override
+  Future<void> insertMovie(Movie movie) async {
+    final db = await _movieData.getDatabase();
+
+    List<String> completeList = [];
+
+    for (var letter in 'ABCDEFGHIJ'.split('')) {
+      for (var number = 1; number <= 10; number++) {
+        completeList.add('$letter$number');
+      }
+    }
+
+    db.insert(
+      TableMovie.tableName,
+      {
+        TableMovie.typeId: movie.idType,
+        TableMovie.title: movie.title,
+        TableMovie.description: movie.description,
+        TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+        TableMovie.showSeat: completeList.join(','),
+        TableMovie.date: movie.date,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

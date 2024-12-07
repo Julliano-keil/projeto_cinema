@@ -1,4 +1,3 @@
-
 import 'package:path/path.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/movie_tables.dart';
 import 'package:projeto_cinema/infrastructure/util/app_log.dart';
@@ -10,9 +9,7 @@ import 'login_tables.dart';
 class MovieDataBase {
   Future<Database>? _db;
 
-  static const int _version = 2;
-
-
+  static const int _version = 3;
 
   /// Initialize local database
   Future<Database> getDatabase() async {
@@ -31,19 +28,50 @@ class MovieDataBase {
       databasePath,
       onCreate: (db, version) async {
         try {
+
           await db.execute(TableUserAccount.createTable);
+          await db.insert(TableUserAccount.tableName, {
+          TableUserAccount.email: 'julianokeil277@gmail.com',
+          TableUserAccount.password: '@Teste123',
+          TableUserAccount.isAdm: 1,
+          TableUserAccount.userName: 'juliano keil',
+          });
+
           await db.execute(TableMovie.createTable);
           await db.execute(TableType.createTable);
-          await db.execute(TableTicket.createTable);
+          db.insert(
+            TableType.tableName,
+            {
+              TableType.id: 1,
+              TableType.label: 'Comedia',
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+          db.insert(
+            TableType.tableName,
+            {
+              TableType.id: 2,
+              TableType.label: 'Terror',
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
 
+          db.insert(
+            TableType.tableName,
+            {
+              TableType.id: 3,
+              TableType.label: 'Ação',
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+          await db.execute(TableTicket.createTable);
         } on Exception catch (e) {
           logInfo('Exception', e);
         }
-
-
       },
       onUpgrade: (db, oldVersion, newVersion) async {
-       logInfo('Data base','Upgrading database from $oldVersion to $newVersion');
+        logInfo(
+            'Data base', 'Upgrading database from $oldVersion to $newVersion');
 
         try {
           if (oldVersion < 1) {
@@ -54,7 +82,10 @@ class MovieDataBase {
             logInfo('Upgrade to version 2', newVersion);
             await _upgradeToVersion2(db);
           }
-
+          if (oldVersion < 3) {
+            logInfo('Upgrade to version 3', newVersion);
+            await _upgradeToVersion3(db);
+          }
         } on Exception catch (e) {
           logInfo('Exception', e);
         }
@@ -63,27 +94,32 @@ class MovieDataBase {
     );
   }
 
-
-  Future<void> _upgradeToVersion2(Database db) async {
+  Future<void> _upgradeToVersion3(Database db) async {
     try {
-      await db.execute(TableTicket.createTable);
-
-
+      await db.execute('''
+        ALTER TABLE ${TableUserAccount.tableName}
+        ADD COLUMN ${TableUserAccount.isAdm} INTEGER NOT NULL DEFAULT 0;
+    ''');
     } on Exception catch (e) {
       logInfo('Exception', e);
     }
   }
+
+  Future<void> _upgradeToVersion2(Database db) async {
+    try {
+      await db.execute(TableTicket.createTable);
+    } on Exception catch (e) {
+      logInfo('Exception', e);
+    }
+  }
+
   Future<void> _upgradeToVersion1(Database db) async {
     try {
       await db.execute(TableUserAccount.createTable);
       await db.execute(TableMovie.createTable);
       await db.execute(TableType.createTable);
-
-
     } on Exception catch (e) {
       logInfo('Exception', e);
     }
   }
-
-
 }

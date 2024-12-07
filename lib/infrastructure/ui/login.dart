@@ -16,16 +16,25 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => const LoginScreen(),
-        'cinema': (context) => const CinemaScreen(),
-        'movie': (context) => const MovieScreen(),
-        'seat_selection': (context) => const SeatSeScreen(),
-        'my_tickets': (context) => const MyTickets(),
-      },
-      initialRoute: '/',
+    return ChangeNotifierProvider<LoginState>(
+      create: (context) => LoginState(
+        useCase: Provider.of(context, listen: false),
+      ),
+      child: Consumer<LoginState>(
+        builder: (_, state, __) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            routes: {
+              '/': (context) => const LoginScreen(),
+              'cinema': (context) => const CinemaScreen(),
+              'movie': (context) => const MovieScreen(),
+              'seat_selection': (context) => const SeatSeScreen(),
+              'my_tickets': (context) => const MyTickets(),
+            },
+            initialRoute: '/',
+          );
+        },
+      ),
     );
   }
 }
@@ -297,8 +306,8 @@ class _FormUser extends StatelessWidget {
                           } else {
                             final logUser = await state.logUser();
 
-                            if (logUser) {
-                              Navigator.pushNamed(context, 'cinema');
+                            if (logUser && context.mounted) {
+                             await Navigator.pushNamed(context, 'cinema');
                               return;
                             } else {
                               return snackBarDefault(
@@ -342,5 +351,3 @@ class _FormUser extends StatelessWidget {
         ).animate1());
   }
 }
-
-

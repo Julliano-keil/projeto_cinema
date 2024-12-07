@@ -10,4 +10,9 @@ abstract class MovieRepository {
 
   /// insert Ticket
   Future<List<SelectPriceMovie>> getMyTickets();
+
+  ///  solicitation Reimbursement
+  Future<void> solicitationReimbursement(SelectPriceMovie selectPriceMovie);
+
+  Future<void> insertMovie( Movie movie);
 }

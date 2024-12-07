@@ -1,5 +1,8 @@
+import 'package:projeto_cinema/domain/entities/sharedPreferences_keys.dart';
 import 'package:projeto_cinema/domain/entities/user.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/login_tables.dart';
+import 'package:projeto_cinema/infrastructure/util/app_log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../interface/login_interface_repository.dart';
@@ -32,6 +35,7 @@ class _LoginInterfaceRepository implements LoginInterfaceRepository {
     SELECT ${TableUserAccount.id} as id,
     ${TableUserAccount.userName} as name,
     ${TableUserAccount.email} as email,
+    ${TableUserAccount.isAdm} as adm,
     ${TableUserAccount.password} as password
     FROM ${TableUserAccount.tableName} 
     WHERE ${TableUserAccount.email} = '${userAccount.email}' AND ${TableUserAccount.password} = '${userAccount.password}';
@@ -45,8 +49,26 @@ class _LoginInterfaceRepository implements LoginInterfaceRepository {
       userAccountQuery = UserAccount(
           name: item['name'] as String,
           email: item['email'] as String,
+          isAdm: item['adm']  == 1,
           password: item['password'] as String);
     }
+      var prefs = await SharedPreferences.getInstance();
+
+    if(userAccountQuery?.isAdm ?? false){
+
+     await prefs.setBool(SharedPreferencesKeys.isAdm, true);
+
+    } if(!(userAccountQuery?.isAdm ?? false) ){
+
+     await prefs.setBool(SharedPreferencesKeys.isAdm, false);
+
+    }
+
+
+    logInfo('ÇÇÇprefs.getBool(SharedPreferencesKeys.isAdm)',prefs.getBool(SharedPreferencesKeys.isAdm));
+    logInfo('ÇÇÇuserAccountQuery?.isAdm',userAccountQuery?.isAdm);
+
+
 
     return userAccountQuery;
   }

@@ -115,6 +115,7 @@ class TextFormFieldDefault extends StatelessWidget {
         child: TextFormField(
           controller:controller,
           validator: validator,
+          keyboardType: keyboardType,
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w300,
@@ -173,6 +174,7 @@ class TextFormFieldDefault extends StatelessWidget {
             ),
           ),
           obscureText: obscureText,
+          inputFormatters: textInputFormatter,
         ),
 
       ),

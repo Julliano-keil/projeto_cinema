@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/seat_selection_state.dart';
 import 'package:projeto_cinema/infrastructure/util/snack_bar.dart';
@@ -242,9 +241,10 @@ class _ModalPrice extends StatelessWidget {
                                     child: InkWell(
                                       onTap: () async {
                                         final pop = await _showPaymentDialog(
-                                            context,
-                                            state.selectPriceMovie,
-                                            state);
+                                          context,
+                                          state.selectPriceMovie,
+                                          state,
+                                        );
                                         if (pop ?? false) {
                                           Navigator.of(context)
                                               .pushNamedAndRemoveUntil(
@@ -439,12 +439,14 @@ class _ItemSelectPrice extends StatelessWidget {
         onTap: () {
           state.index = index;
           state.selectPriceMovie = SelectPriceMovie(
+            movieId: state.movie.id,
             movie: state.movie,
-              price: price,
-              type: type,
-              seat: state.seat,
-              hours: '${state.movie.date} ${state.hours}',
-              movieName: state.movie.title);
+            price: price,
+            type: type,
+            seat: state.seat,
+            hours: '${state.movie.date} as ${state.hours}',
+            movieName: state.movie.title,
+          );
         },
         child: Stack(
           children: [
@@ -641,7 +643,7 @@ class SeatTile extends StatelessWidget {
     bool? isExistSeat = false;
     bool? isSelected = false;
 
-    for (final item in movie.showSeat) {
+    for (final item in movie.showSeat ?? <String>[]) {
       if (item.trim() == label.trim()) {
         isExistSeat = true;
       }
@@ -773,7 +775,7 @@ class _InfoMovie extends StatelessWidget {
                           ),
                         ),
                         child: Center(
-                          child: Text(movie.date),
+                          child: Text(movie.date ?? ''),
                         ),
                       ),
                     ),
@@ -783,7 +785,7 @@ class _InfoMovie extends StatelessWidget {
               SizedBox(
                 width: 110,
                 child: Text(
-                  movie.title,
+                  movie.title ?? '',
                   maxLines: 2,
                   style: const TextStyle(
                     fontSize: 14,
@@ -823,4 +825,3 @@ class _InfoMovie extends StatelessWidget {
     );
   }
 }
-

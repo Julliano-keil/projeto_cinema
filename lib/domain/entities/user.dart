@@ -5,11 +5,15 @@ class UserAccount {
     required this.email,
     required this.password,
     required this.name,
+     this.isAdm,
   });
 
 
   /// The user's email (used as primary identifier).
   final String email;
+
+  /// The user's email (used as primary identifier).
+  final bool? isAdm;
 
   /// The user's password.
   final String password;

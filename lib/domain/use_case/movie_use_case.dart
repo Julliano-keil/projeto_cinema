@@ -11,7 +11,6 @@ MovieUseCase newMovieUseCase(
 }
 
 class _MovieUseCase implements MovieUseCase {
-
   _MovieUseCase(this._repository);
 
   final MovieRepository _repository;
@@ -28,4 +27,11 @@ class _MovieUseCase implements MovieUseCase {
 
   @override
   Future<List<SelectPriceMovie>> getMyTickets() => _repository.getMyTickets();
+
+  @override
+  Future<void> solicitationReimbursement(SelectPriceMovie selectPriceMovie) =>
+      _repository.solicitationReimbursement(selectPriceMovie);
+
+  @override
+  Future<void> insertMovie(Movie movie) => _repository.insertMovie(movie);
 }

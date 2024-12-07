@@ -9,6 +9,9 @@ class TableUserAccount {
   static const id = 'id';
 
   /// Email column 'email' (text)
+  static const isAdm = 'adm';
+
+  /// Email column 'email' (text)
   static const email = 'email';
 
   /// Password column 'password' (text)
@@ -20,10 +23,11 @@ class TableUserAccount {
   /// DDL to create the [UserAccount] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
-    $id       INTEGER  PRIMARY KEY AUTOINCREMENT,
-    $email    TEXT NOT NULL DEFAULT '',
-    $password TEXT NOT NULL DEFAULT '',
-    $userName TEXT NOT NULL DEFAULT ''
+    $id           INTEGER  PRIMARY KEY AUTOINCREMENT,
+    $isAdm        INTEGER NOT NULL DEFAULT 0,
+    $email        TEXT NOT NULL DEFAULT '',
+    $password     TEXT NOT NULL DEFAULT '',
+    $userName     TEXT NOT NULL DEFAULT ''
   );
   ''';
 
@@ -31,17 +35,18 @@ class TableUserAccount {
   static Map<String, dynamic> toMap(UserAccount account) {
     return <String, dynamic>{
       email: account.email,
+      isAdm: account.isAdm,
       password: account.password,
       userName: account.name
     };
   }
 
-  // /// Convert a map into a [UserAccount] object
-  // static UserAccount fromMap(Map<String, dynamic> row) {
-  //   return UserAccount(
-  //     email: row[email] as String,
-  //     password: row[password] as String,
-  //     name: row[userName] as String,
-  //   );
-  // }
+// /// Convert a map into a [UserAccount] object
+// static UserAccount fromMap(Map<String, dynamic> row) {
+//   return UserAccount(
+//     email: row[email] as String,
+//     password: row[password] as String,
+//     name: row[userName] as String,
+//   );
+// }
 }

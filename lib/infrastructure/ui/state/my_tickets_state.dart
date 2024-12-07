@@ -6,7 +6,7 @@ import '../../../domain/entities/movie.dart';
 class MyTicketsState extends ChangeNotifier {
   MyTicketsState({
     required MovieUseCase movieUseCase,
-  }) : _movieUseCase = movieUseCase{
+  }) : _movieUseCase = movieUseCase {
     _init();
   }
 
@@ -16,11 +16,9 @@ class MyTicketsState extends ChangeNotifier {
 
   List<SelectPriceMovie> get listMyTickets => _listMyTickets;
 
-
   Future<void> _init() async {
-   await getMyTickets();
+    await getMyTickets();
   }
-
 
   Future<void> getMyTickets() async {
     final list = await _movieUseCase.getMyTickets();
@@ -28,6 +26,16 @@ class MyTicketsState extends ChangeNotifier {
     _listMyTickets
       ..clear()
       ..addAll(list);
+    notifyListeners();
+  }
+
+  Future<void> solicitationReimbursement(
+      SelectPriceMovie selectPriceMovie) async {
+
+    _movieUseCase.solicitationReimbursement(selectPriceMovie.copyWith(
+      reimbursement: true,
+    ));
+
     notifyListeners();
   }
 }

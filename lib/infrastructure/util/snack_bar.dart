@@ -21,6 +21,7 @@ void snackBarDefault({
     style: FlutterSnackBarStyle(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       radius: BorderRadius.circular(6),
+
       backgroundColor: severity.getColor(context),
       shadow: BoxShadow(
         color: Colors.black.withOpacity(0.55),
