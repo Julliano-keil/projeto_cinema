@@ -106,7 +106,7 @@ class _MovieRepository implements MovieRepository {
     ${TableMovie.description}          as description,
     ${TableMovie.date}                 as date,
     ${TableMovie.title}                as title,
-    ${TableMovie.showSeat}             as seat,
+   
     ${TableMovie.showTimes}            as show_times
     FROM ${TableMovie.tableName} 
     ''';
@@ -177,14 +177,14 @@ class _MovieRepository implements MovieRepository {
 
     final string = listStr.join(',');
 
-    db.update(
-        TableMovie.tableName,
-        {
-          TableMovie.showSeat: string,
-        },
-        where: '${TableMovie.id} = ?',
-        whereArgs: [selectPriceMovie?.movie?.id],
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    // db.update(
+    //     TableMovie.tableName,
+    //     {
+    //       TableMovie.showSeat: string,
+    //     },
+    //     where: '${TableMovie.id} = ?',
+    //     whereArgs: [selectPriceMovie?.movie?.id],
+    //     conflictAlgorithm: ConflictAlgorithm.replace);
 
     db.insert(
         TableTicket.tableName,
@@ -254,6 +254,7 @@ class _MovieRepository implements MovieRepository {
     ${TableMovie.showSeat}             as seat,
     ${TableMovie.showTimes}            as show_times
     FROM ${TableMovie.tableName} 
+    INNER JOIN ${TableMovie.id}  =  ${TableSection.idMovie} 
     WHERE ${TableMovie.id} = ${selectPriceMovie.movieId};
     ''';
 

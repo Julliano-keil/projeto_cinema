@@ -100,6 +100,7 @@ class MovieDataBase {
         ALTER TABLE ${TableUserAccount.tableName}
         ADD COLUMN ${TableUserAccount.isAdm} INTEGER NOT NULL DEFAULT 0;
     ''');
+
     } on Exception catch (e) {
       logInfo('Exception', e);
     }
@@ -118,6 +119,75 @@ class MovieDataBase {
       await db.execute(TableUserAccount.createTable);
       await db.execute(TableMovie.createTable);
       await db.execute(TableType.createTable);
+
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 1,
+          TableMovie.title: 'Um maluco no pedaço',
+          TableMovie.description: 'comedia',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 2,
+          TableMovie.title: 'O grito',
+          TableMovie.description: 'terror',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 3,
+          TableMovie.title: 'Homem aranha',
+          TableMovie.description: 'filme de açao',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+
+
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 3,
+          TableMovie.title: 'Planeta dos macacos',
+          TableMovie.description: 'filme de açao',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 2,
+          TableMovie.title: 'A Frera',
+          TableMovie.description: 'filme de terror',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      db.insert(
+        TableMovie.tableName,
+        {
+          TableMovie.typeId: 1,
+          TableMovie.title: 'Gente grande',
+          TableMovie.description: 'comedia',
+          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
+          TableMovie.date: '23/02/2024',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
     } on Exception catch (e) {
       logInfo('Exception', e);
     }

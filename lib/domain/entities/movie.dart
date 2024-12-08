@@ -2,7 +2,7 @@ class Movie {
   final int? id;
   final int? idType;
   final String? title;
-  final String? date;
+  final int? date;
   final String? description;
   final List<String>? showTimes;
   final List<String>? showSeat;
@@ -47,10 +47,12 @@ class SelectPriceMovie {
     this.hours,
     this.movie,
     this.id,
+    this.sectionId,
   });
 
   final int? id;
   final int? movieId;
+  final int? sectionId;
   final String? type;
   final double? price;
   final bool? reimbursement;
@@ -72,9 +74,11 @@ class SelectPriceMovie {
     String? seat,
     String? movieName,
     String? hours,
+    int? sectionId,
   }) {
     return SelectPriceMovie(
       id: id ?? this.id,
+      sectionId: sectionId ?? this.sectionId,
       type: type ?? this.type,
       price: price ?? this.price,
       movieId:movieId ?? this.movieId,
@@ -86,3 +90,23 @@ class SelectPriceMovie {
     );
   }
 }
+class SectionEntity {
+
+  /// Properties
+  final int? id;
+  final int idMovie;
+  final bool reserved ;
+  final String label;
+  final List<String> showTimes;
+
+  /// Constructor
+  SectionEntity({
+    this.id,
+    required this.idMovie,
+    required this.label,
+    required this.reserved,
+    required this.showTimes,
+  });
+
+}
+
