@@ -100,12 +100,14 @@ class _MovieRepository implements MovieRepository {
     // );
 
     var query = '''
-    SELECT ${TableMovie.id}            as id,
-    ${TableMovie.typeId}               as id_type,
-    ${TableMovie.description}          as description,
-    ${TableMovie.title}                as title,
-    ${TableMovie.date}                as date
-    FROM ${TableMovie.tableName} 
+    SELECT m.${TableMovie.id}            as id,
+    m.${TableMovie.typeId}                as id_type,
+    m.${TableMovie.description}           as description,
+    m.${TableMovie.title}                 as title,
+    m.${TableMovie.date}                  as date,
+    t.${TableType.label}                  as label_type
+    FROM ${TableMovie.tableName} m
+    INNER JOIN ${TableType.tableName} t t.${TableType.id} = m.${TableMovie.typeId} 
     ''';
 
     final result = await db.rawQuery(query);
@@ -121,6 +123,7 @@ class _MovieRepository implements MovieRepository {
           title: item['title'] as String,
           date: item['date'] as String,
           description: item['description'] as String,
+          labelType: item['label_type'] as String,
         ),
       );
     }

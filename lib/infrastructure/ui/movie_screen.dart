@@ -125,9 +125,13 @@ class _ItemType extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(context,
-                                'register_section',
-                                  arguments: movie.id,
+                                Navigator.pushNamed(
+                                  context,
+                                  'register_section',
+                                  arguments: DetailArguments(
+                                    movie: movie,
+                                    hours: state.hours ?? '',
+                                  ),
                                 );
                               },
                               child: Container(

@@ -4,6 +4,7 @@ class Movie {
   final String? title;
   final String? date;
   final String? description;
+  final String? labelType;
   final List<String>? showTimes;
   final List<String>? showSeat;
 
@@ -12,6 +13,7 @@ class Movie {
      this.idType,
      this.title,
      this.description,
+     this.labelType,
      this.showTimes,
      this.showSeat,
      this.date,
