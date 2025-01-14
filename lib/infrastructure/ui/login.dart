@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_cinema/infrastructure/ui/movie_screen.dart';
 import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
+import 'package:projeto_cinema/infrastructure/ui/register_muvie.dart';
+import 'package:projeto_cinema/infrastructure/ui/register_section.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
-import 'package:projeto_cinema/infrastructure/ui/util/text_form.dart';
+import 'package:projeto_cinema/infrastructure/util/text_form.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-
 import ' seat_selection_screen.dart';
 import '../util/snack_bar.dart';
 import 'cinema_screen.dart';
@@ -30,6 +30,8 @@ class Login extends StatelessWidget {
               'movie': (context) => const MovieScreen(),
               'seat_selection': (context) => const SeatSeScreen(),
               'my_tickets': (context) => const MyTickets(),
+              'register_movie': (context) => const RegisterMovie(),
+              'register_section': (context) => const RegisterSection(),
             },
             initialRoute: '/',
           );
@@ -310,10 +312,12 @@ class _FormUser extends StatelessWidget {
                              await Navigator.pushNamed(context, 'cinema');
                               return;
                             } else {
-                              return snackBarDefault(
+                              if(context.mounted) {
+                                return snackBarDefault(
                                   context: context,
                                   severity: SnackBarSeverity.warning,
                                   message: 'Usuario nao encontrado');
+                              }
                             }
                           }
 

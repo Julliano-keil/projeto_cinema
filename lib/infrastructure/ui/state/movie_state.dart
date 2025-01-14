@@ -19,7 +19,6 @@ class MovieState extends ChangeNotifier {
   final _controllerDate = TextEditingController();
   final _controllerDescription = TextEditingController();
 
-
   final formKey = GlobalKey<FormState>();
 
   TextEditingController get controllerName => _controllerName;
@@ -29,7 +28,6 @@ class MovieState extends ChangeNotifier {
   TextEditingController get controllerDescription => _controllerDescription;
   final _listMovie = <Movie>[];
   final _listType = <TypeMovie>[];
-
 
   bool? isAdm = false;
 
@@ -42,7 +40,8 @@ class MovieState extends ChangeNotifier {
   String? _hours;
 
   int? get idCategory => _idCategory;
-  Future<bool?> get _isAdm async{
+
+  Future<bool?> get _isAdm async {
     var prefs = await SharedPreferences.getInstance();
 
     return prefs.getBool(SharedPreferencesKeys.isAdm);
@@ -61,17 +60,18 @@ class MovieState extends ChangeNotifier {
   }
 
   Future<void> _init() async {
-
-    isAdm = (await _isAdm) ?? false ;
+    isAdm = (await _isAdm) ?? false;
     await getListMovie();
     await getListType();
   }
 
   Future<void> getListType() async {
     final list = await _movieUseCase.getTypeMovie();
+
     _listType
       ..clear()
       ..addAll(list);
+    logInfo('ÇÇÇÇ', _listType.length);
 
     notifyListeners();
   }
@@ -86,20 +86,18 @@ class MovieState extends ChangeNotifier {
   }
 
   Future<void> insertMovie() async {
-     await _movieUseCase.insertMovie(
-       Movie(
-          idType: _idCategory,
-         title: _controllerName.text,
-         description: _controllerDescription.text,
-         date: _controllerDate.text,
-       )
-     );
+    await _movieUseCase.insertMovie(Movie(
+      idType: _idCategory,
+      title: _controllerName.text,
+      date: _controllerDate.text,
+      description: _controllerDescription.text,
+    ));
 
-     _controllerDate.clear();
-     _controllerDescription.clear();
-     _controllerName.clear();
-     _idCategory = null;
+    _controllerDate.clear();
+    _controllerDescription.clear();
+    _controllerName.clear();
+    _idCategory = null;
 
-     notifyListeners();
+    notifyListeners();
   }
 }

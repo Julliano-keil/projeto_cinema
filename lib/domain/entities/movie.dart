@@ -2,7 +2,7 @@ class Movie {
   final int? id;
   final int? idType;
   final String? title;
-  final int? date;
+  final String? date;
   final String? description;
   final List<String>? showTimes;
   final List<String>? showSeat;

@@ -1,6 +1,5 @@
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/movie_tables.dart';
-import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../interface/movie_interface_repository.dart';
@@ -104,10 +103,8 @@ class _MovieRepository implements MovieRepository {
     SELECT ${TableMovie.id}            as id,
     ${TableMovie.typeId}               as id_type,
     ${TableMovie.description}          as description,
-    ${TableMovie.date}                 as date,
     ${TableMovie.title}                as title,
-   
-    ${TableMovie.showTimes}            as show_times
+    ${TableMovie.date}                as date
     FROM ${TableMovie.tableName} 
     ''';
 
@@ -116,18 +113,14 @@ class _MovieRepository implements MovieRepository {
     final listMovie = <Movie>[];
 
     for (final item in result) {
-      final listString = item['show_times'] as String;
-      final listSeat = item['seat'] as String;
 
       listMovie.add(
         Movie(
           id: item['id'] as int,
           idType: item['id_type'] as int,
           title: item['title'] as String,
-          description: item['description'] as String,
           date: item['date'] as String,
-          showTimes: listString.split(','),
-          showSeat: listSeat.split(','),
+          description: item['description'] as String,
         ),
       );
     }
@@ -143,7 +136,7 @@ class _MovieRepository implements MovieRepository {
 
     var query = '''
     SELECT ${TableType.id} as id,
-    ${TableType.label} as label
+    ${TableType.label}     as label
     FROM ${TableType.tableName} 
     ''';
 
@@ -200,12 +193,8 @@ class _MovieRepository implements MovieRepository {
 
     var query = '''
     SELECT ${TableTicket.id} as id,
-    ${TableTicket.seat} as seat,
-    ${TableTicket.hours} as hours,
-    ${TableTicket.movieName} as movie_name,
     ${TableTicket.price} as price,
     ${TableTicket.reimbursement} as reimbursement,
-    ${TableTicket.movieId} as movie_id,
     ${TableTicket.type} as type
     FROM ${TableTicket.tableName} 
     ''';
@@ -251,8 +240,6 @@ class _MovieRepository implements MovieRepository {
 
     var query = '''
     SELECT ${TableMovie.id}            as id,
-    ${TableMovie.showSeat}             as seat,
-    ${TableMovie.showTimes}            as show_times
     FROM ${TableMovie.tableName} 
     INNER JOIN ${TableMovie.id}  =  ${TableSection.idMovie} 
     WHERE ${TableMovie.id} = ${selectPriceMovie.movieId};
@@ -288,11 +275,9 @@ class _MovieRepository implements MovieRepository {
 
       string = listStr.join(',');
     }
-
     db.update(
         TableMovie.tableName,
         {
-          TableMovie.showSeat: string,
         },
         where: '${TableMovie.id} = ?',
         whereArgs: [selectPriceMovie.movieId],
@@ -303,23 +288,21 @@ class _MovieRepository implements MovieRepository {
   Future<void> insertMovie(Movie movie) async {
     final db = await _movieData.getDatabase();
 
-    List<String> completeList = [];
-
-    for (var letter in 'ABCDEFGHIJ'.split('')) {
-      for (var number = 1; number <= 10; number++) {
-        completeList.add('$letter$number');
-      }
-    }
+    // List<String> completeList = [];
+    //
+    // for (var letter in 'ABCDEFGHIJ'.split('')) {
+    //   for (var number = 1; number <= 10; number++) {
+    //     completeList.add('$letter$number');
+    //   }
+    // }
 
     db.insert(
       TableMovie.tableName,
       {
         TableMovie.typeId: movie.idType,
         TableMovie.title: movie.title,
-        TableMovie.description: movie.description,
-        TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-        TableMovie.showSeat: completeList.join(','),
         TableMovie.date: movie.date,
+        TableMovie.description: movie.description,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

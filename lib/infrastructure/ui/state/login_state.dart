@@ -48,6 +48,16 @@ class LoginState extends ChangeNotifier {
 
   void _init() async {
 
+    var prefs = await SharedPreferences.getInstance();
+
+    final email = prefs.getString(SharedPreferencesKeys.email);
+
+    if(email != null){
+      controllerEmail.text = prefs.getString(SharedPreferencesKeys.email) ?? '';
+      controllerPassWord.text = prefs.getString(SharedPreferencesKeys.password) ?? '';
+    }
+
+
     notifyListeners();
   }
 
@@ -66,7 +76,14 @@ class LoginState extends ChangeNotifier {
       name: controllerName.text.trim(),
     );
 
+
+
     await _useCase.registerUser(user);
+
+    var prefs = await SharedPreferences.getInstance();
+
+    prefs.setString(SharedPreferencesKeys.email,controllerEmail.text);
+    prefs.setString(SharedPreferencesKeys.password,controllerPassWord.text);
 
     controllerEmail.clear();
     controllerPassWord.clear();

@@ -1,8 +1,10 @@
 import 'package:path/path.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/data_base/movie_tables.dart';
 import 'package:projeto_cinema/infrastructure/util/app_log.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../../../domain/entities/sharedPreferences_keys.dart';
 import 'login_tables.dart';
 
 /// Create all tables of local database and initialize them
@@ -36,6 +38,10 @@ class MovieDataBase {
           TableUserAccount.isAdm: 1,
           TableUserAccount.userName: 'juliano keil',
           });
+
+          var prefs = await SharedPreferences.getInstance();
+          prefs.setString(SharedPreferencesKeys.email,'julianokeil277@gmail.com');
+          prefs.setString(SharedPreferencesKeys.password,'@Teste123');
 
           await db.execute(TableMovie.createTable);
           await db.execute(TableType.createTable);
@@ -119,75 +125,6 @@ class MovieDataBase {
       await db.execute(TableUserAccount.createTable);
       await db.execute(TableMovie.createTable);
       await db.execute(TableType.createTable);
-
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 1,
-          TableMovie.title: 'Um maluco no pedaço',
-          TableMovie.description: 'comedia',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 2,
-          TableMovie.title: 'O grito',
-          TableMovie.description: 'terror',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 3,
-          TableMovie.title: 'Homem aranha',
-          TableMovie.description: 'filme de açao',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-
-
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 3,
-          TableMovie.title: 'Planeta dos macacos',
-          TableMovie.description: 'filme de açao',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 2,
-          TableMovie.title: 'A Frera',
-          TableMovie.description: 'filme de terror',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-      db.insert(
-        TableMovie.tableName,
-        {
-          TableMovie.typeId: 1,
-          TableMovie.title: 'Gente grande',
-          TableMovie.description: 'comedia',
-          TableMovie.showTimes: '19:00 , 20:30 ,22:00',
-          TableMovie.date: '23/02/2024',
-        },
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
     } on Exception catch (e) {
       logInfo('Exception', e);
     }
