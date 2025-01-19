@@ -107,7 +107,7 @@ class _MovieRepository implements MovieRepository {
     m.${TableMovie.date}                  as date,
     t.${TableType.label}                  as label_type
     FROM ${TableMovie.tableName} m
-    INNER JOIN ${TableType.tableName} t t.${TableType.id} = m.${TableMovie.typeId} 
+    INNER JOIN ${TableType.tableName} t t.${TableType.id} == m.${TableMovie.typeId} 
     ''';
 
     final result = await db.rawQuery(query);
@@ -134,8 +134,6 @@ class _MovieRepository implements MovieRepository {
   @override
   Future<List<TypeMovie>> getTypeMovie() async {
     final db = await _movieData.getDatabase();
-
-
 
     var query = '''
     SELECT ${TableType.id} as id,

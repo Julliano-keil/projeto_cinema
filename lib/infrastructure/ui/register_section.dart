@@ -8,9 +8,8 @@ class RegisterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final arguments =
-    ModalRoute.of(context)!.settings.arguments as DetailArguments;
+        ModalRoute.of(context)!.settings.arguments as DetailArguments;
 
     final movie = arguments.movie;
     final hoursMovie = arguments.hours;
@@ -27,7 +26,7 @@ class RegisterSection extends StatelessWidget {
           ),
         ),
       ),
-      body:  _Body(
+      body: _Body(
         movie: movie,
       ),
     );
@@ -43,26 +42,21 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
         _InfoMovie(
           movie: movie,
         ),
-
       ],
     );
   }
 }
 
-
 class _InfoMovie extends StatelessWidget {
   const _InfoMovie({
     super.key,
     required this.movie,
-
   });
 
   final Movie movie;
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,10 +123,10 @@ class _InfoMovie extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                   Text(
+                  Text(
                     movie.description ?? '',
                     maxLines: 3,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                     ),
                   ),
@@ -140,14 +134,11 @@ class _InfoMovie extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(8),
-
                     ),
                     child: Text(
                       movie.labelType ?? '',
                       style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
@@ -159,4 +150,3 @@ class _InfoMovie extends StatelessWidget {
     );
   }
 }
-

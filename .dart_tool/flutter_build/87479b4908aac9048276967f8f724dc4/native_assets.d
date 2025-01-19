@@ -1,1 +1,0 @@
- C:\\Users\\home\\AndroidStudioProjects\\projeto_cinema\\.dart_tool\\flutter_build\\87479b4908aac9048276967f8f724dc4\\native_assets.yaml: 

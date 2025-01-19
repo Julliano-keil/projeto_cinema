@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:projeto_cinema/infrastructure/ui/movie_screen.dart';
 import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/register_muvie.dart';
@@ -58,14 +59,18 @@ class LoginScreen extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 Align(
-                    alignment: Alignment.topCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 80.0,
-                      ),
-                      child: Image.network(
-                          'https://tecnologiahojeemdia.com.br/wordpress/wp-content/files/tecnologiahojeemdia.com.br/2024/04/tecnologiahojeemdia-2-8-768x512.jpg'),
-                    ).animate1()),
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 120.0,
+                    ),
+                    child: Lottie.asset(
+                        'assetsapp/lottie_animation/movie_login.json',
+                        reverse: true,
+                        repeat: true,
+                        addRepaintBoundary: true),
+                  ),
+                ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
@@ -309,14 +314,14 @@ class _FormUser extends StatelessWidget {
                             final logUser = await state.logUser();
 
                             if (logUser && context.mounted) {
-                             await Navigator.pushNamed(context, 'cinema');
+                              await Navigator.pushNamed(context, 'cinema');
                               return;
                             } else {
-                              if(context.mounted) {
+                              if (context.mounted) {
                                 return snackBarDefault(
-                                  context: context,
-                                  severity: SnackBarSeverity.warning,
-                                  message: 'Usuario nao encontrado');
+                                    context: context,
+                                    severity: SnackBarSeverity.warning,
+                                    message: 'Usuario nao encontrado');
                               }
                             }
                           }

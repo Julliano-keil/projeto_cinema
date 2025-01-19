@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
@@ -75,10 +76,17 @@ class _ItemType extends StatelessWidget {
     final state = Provider.of<MovieState>(context);
 
     if (state.listMovie.isEmpty) {
-      return const Center(
-        child: Text(
-          'Sem filmes para mostrar',
-          style: TextStyle(color: Colors.white),
+      return Center(
+        child: Column(
+          children: [
+            Lottie.asset(
+              'assetsapp/lottie_animation/teste.json',
+            ),
+            const Text(
+              'Sem filmes para mostrar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
         ),
       );
     }
