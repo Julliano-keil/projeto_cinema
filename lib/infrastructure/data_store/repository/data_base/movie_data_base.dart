@@ -11,7 +11,7 @@ import 'login_tables.dart';
 class MovieDataBase {
   Future<Database>? _db;
 
-  static const int _version = 3;
+  static const int _version = 4;
 
   /// Initialize local database
   Future<Database> getDatabase() async {
