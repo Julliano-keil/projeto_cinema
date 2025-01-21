@@ -66,8 +66,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assetsapp/movie.png
-    - assetsapp/lottie_animation/
+    - assets_app/movie.png
+    - assets_app/place_image.png
+    - assets_app/imageDefault.png
+    - assets_app/lottie_animation/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../domain/entities/movie.dart';
 
@@ -19,7 +20,7 @@ class RegisterSection extends StatelessWidget {
         backgroundColor: Colors.black,
         centerTitle: true,
         title: const Text(
-          'Cadastro de sessão',
+          'Visualizar sessões',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -45,6 +46,40 @@ class _Body extends StatelessWidget {
         _InfoMovie(
           movie: movie,
         ),
+
+        _PlaceListEmpty(),
+
+        //const _InsertSection()
+      ],
+    );
+  }
+}
+
+class _PlaceListEmpty extends StatelessWidget {
+  const _PlaceListEmpty({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              top: 120.0,
+            ),
+            child: Lottie.asset(
+              'assets_app/lottie_animation/teste.json',
+              repeat: true,
+              addRepaintBoundary: true,
+
+            ),
+          ),
+        ),
+        const Text(
+          'Nenhuma sessão cadastrada',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        )
       ],
     );
   }
@@ -52,7 +87,6 @@ class _Body extends StatelessWidget {
 
 class _InfoMovie extends StatelessWidget {
   const _InfoMovie({
-    super.key,
     required this.movie,
   });
 
@@ -67,40 +101,22 @@ class _InfoMovie extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: 120,
                 height: 145,
-                color: Colors.grey[300],
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Image.asset(
-                          height: 100,
-                          width: 80,
-                          'assetsapp/movie.png',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(movie.date ?? ''),
-                        ),
-                      ),
-                    ),
-                  ],
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                  border: Border.all(
+                    color: Colors.red,
+                  ),
+                ),
+                child: Image.asset(
+                  fit: BoxFit.fill,
+                  'assets_app/place_image.png',
                 ),
               ),
               SizedBox(
@@ -120,9 +136,17 @@ class _InfoMovie extends StatelessWidget {
           SizedBox(
             width: 250,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 8.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Descrição:',
+                    maxLines: 3,
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                   Text(
                     movie.description ?? '',
                     maxLines: 3,
@@ -130,19 +154,113 @@ class _InfoMovie extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Text(
-                      movie.labelType ?? '',
-                      style: const TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
+                      'Categoria:',
+                      maxLines: 3,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6.0, vertical: 4.0),
+                        child: Text(
+                          movie.labelType ?? '',
+                          style: const TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Data de lançamento:',
+                      maxLines: 3,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Text(
+                    movie.date ?? '',
+                    maxLines: 3,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _InsertSection extends StatelessWidget {
+  const _InsertSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white10,
+                ),
+                child: SizedBox(
+                  height: 60,
+                  child: ListView.builder(
+                    itemCount: 4,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return const _ItemFilterDate();
+                    },
+                  ),
+                ),
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class _ItemFilterDate extends StatelessWidget {
+  const _ItemFilterDate({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Terça',
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          ),
+          Text(
+            '23/10',
+            style: TextStyle(
+              color: Colors.white,
             ),
           )
         ],

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_cinema/domain/interface/section_interface_use_case.dart';
 import 'package:projeto_cinema/domain/use_case/login_use_case.dart';
+import 'package:projeto_cinema/domain/use_case/section_use_case.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/login_repository.dart';
 import 'package:projeto_cinema/infrastructure/data_store/repository/movie_repository.dart';
+import 'package:projeto_cinema/infrastructure/data_store/repository/section_repository.dart';
 
 import 'package:provider/provider.dart';
 
@@ -26,6 +29,10 @@ void main() async {
     db,
   );
 
+  final sectionRepository = newSectionRepository(
+    db,
+  );
+
 //  -=-=-=-=-=-=-=-=-=-=-=-= use case -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=
   final loginInterface = newLoginInterfaceUseCase(
     logRepository,
@@ -35,10 +42,15 @@ void main() async {
     movieRepository,
   );
 
+  final sectionUseCase = newSectionUseCase(
+    sectionRepository,
+  );
+
   runApp(
     MyApp(
       loginInterfaceUseCase: loginInterface,
       movieUseCase: movieUseCase,
+      sectionUseCase: sectionUseCase,
     ),
   );
 }
@@ -48,10 +60,12 @@ class MyApp extends StatefulWidget {
     super.key,
     required this.loginInterfaceUseCase,
     required this.movieUseCase,
+    required this.sectionUseCase,
   });
 
   final LoginInterfaceUseCase loginInterfaceUseCase;
   final MovieUseCase movieUseCase;
+  final SectionUseCase sectionUseCase;
 
   @override
   State<MyApp> createState() => _MyAppState();

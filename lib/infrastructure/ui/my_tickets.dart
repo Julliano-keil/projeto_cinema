@@ -107,7 +107,7 @@ class _MyTicketsItem extends StatelessWidget {
                       child: Image.asset(
                         height: 80,
                         width: 80,
-                        'assetsapp/movie.png',
+                        'assets_app/movie.png',
                         color: Colors.black,
                       ),
                     ),
@@ -240,7 +240,7 @@ class ModalReimbursement extends StatelessWidget {
                             child: Image.asset(
                               height: 80,
                               width: 80,
-                              'assetsapp/movie.png',
+                              'assets_app/movie.png',
                               color: Colors.black,
                             ),
                           ),

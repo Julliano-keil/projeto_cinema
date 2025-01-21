@@ -138,7 +138,7 @@ class _ItemCinema extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
-                    'assetsapp/movie.png',
+                    'assets_app/movie.png',
                     color: Colors.white,
                     width: 200,
                     height: 200,

@@ -86,12 +86,14 @@ class MovieState extends ChangeNotifier {
   }
 
   Future<void> insertMovie() async {
-    await _movieUseCase.insertMovie(Movie(
+    final movie = Movie(
       idType: _idCategory,
       title: _controllerName.text,
       date: _controllerDate.text,
       description: _controllerDescription.text,
-    ));
+    );
+
+    await _movieUseCase.insertMovie(movie);
 
     _controllerDate.clear();
     _controllerDescription.clear();

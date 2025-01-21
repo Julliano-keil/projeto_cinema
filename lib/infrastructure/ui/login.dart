@@ -7,6 +7,7 @@ import 'package:projeto_cinema/infrastructure/ui/register_section.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
 import 'package:projeto_cinema/infrastructure/util/text_form.dart';
 import 'package:provider/provider.dart';
+
 import ' seat_selection_screen.dart';
 import '../util/snack_bar.dart';
 import 'cinema_screen.dart';
@@ -65,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                       top: 120.0,
                     ),
                     child: Lottie.asset(
-                        'assetsapp/lottie_animation/movie_login.json',
+                        'assets_app/lottie_animation/movie_login.json',
                         reverse: true,
                         repeat: true,
                         addRepaintBoundary: true),
@@ -144,7 +145,7 @@ class _FormAction extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Image.asset(
-              'assetsapp/movie.png',
+              'assets_app/movie.png',
               color: Colors.white,
               width: 200,
               height: 200,
@@ -314,7 +315,7 @@ class _FormUser extends StatelessWidget {
                             final logUser = await state.logUser();
 
                             if (logUser && context.mounted) {
-                              await Navigator.pushNamed(context, 'cinema');
+                              Navigator.pushNamed(context, 'movie');
                               return;
                             } else {
                               if (context.mounted) {

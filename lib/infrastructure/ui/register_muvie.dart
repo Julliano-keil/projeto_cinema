@@ -126,8 +126,6 @@ class _InsertMovie extends StatelessWidget {
 
                   await state.insertMovie();
 
-                  await state.getListMovie();
-
                   if (context.mounted) {
                     snackBarDefault(
                       context: context,

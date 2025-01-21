@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_cinema/domain/entities/movie.dart';
+import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/movie_state.dart';
 import 'package:projeto_cinema/infrastructure/util/text_form.dart';
@@ -21,50 +22,39 @@ class MovieScreen extends StatelessWidget {
         movieUseCase: Provider.of(context, listen: false),
       ),
       child: Consumer<MovieState>(builder: (_, state, __) {
-        return Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Colors.black,
-            centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  await Navigator.pushNamed(
-                    context,
-                    'my_tickets',
-                  );
-                  await state.getListMovie();
-                  await state.getListType();
-                },
-                icon: const Icon(
-                  Icons.confirmation_num_outlined,
-                  color: Colors.white,
-                ),
-              ),
-              IconButton(
-                  onPressed: () async {
-                    await Navigator.pushNamed(
-                      context,
-                      'register_movie',
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.movie_creation_outlined,
-                    color: Colors.white,
-                  ))
-            ],
-            title: const Text(
-              'Filmes',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          body: const _ItemType(),
-        );
+        return SizedBox(
+            height: 50,
+            child: _NavigatorBar());
       }),
     );
+  }
+}
+
+class _NavigatorBar extends StatelessWidget {
+  const _NavigatorBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+
+      items: [
+        BottomNavigationBarItem(
+
+          icon: Icon(Icons.movie_creation_outlined),
+          label: 'Filmes',
+          activeIcon: _ItemType(),
+
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.movie_creation_outlined),
+          label: 'Filmes'
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.movie_creation_outlined),
+          label: 'Filmes'
+        ),
+      ],
+        );
   }
 }
 
@@ -80,7 +70,7 @@ class _ItemType extends StatelessWidget {
         child: Column(
           children: [
             Lottie.asset(
-              'assetsapp/lottie_animation/teste.json',
+              'assets_app/lottie_animation/teste.json',
             ),
             const Text(
               'Sem filmes para mostrar',
@@ -145,21 +135,16 @@ class _ItemType extends StatelessWidget {
                               child: Container(
                                 width: 120,
                                 height: 145,
-                                color: Colors.grey[300],
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(2),
+                                    border: Border.all(color: Colors.red)),
                                 child: Column(
                                   children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Image.asset(
-                                          height: 100,
-                                          width: 80,
-                                          'assetsapp/movie.png',
-                                          color: Colors.black,
-                                        ),
-                                      ),
+                                    Image.asset(
+                                      fit: BoxFit.fitWidth,
+                                      height: 120,
+                                      'assets_app/imageDefault.png',
                                     ),
                                     Expanded(
                                       child: Container(

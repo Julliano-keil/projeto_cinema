@@ -760,7 +760,7 @@ class _InfoMovie extends StatelessWidget {
                         child: Image.asset(
                           height: 100,
                           width: 80,
-                          'assetsapp/movie.png',
+                          'assets_app/movie.png',
                           color: Colors.black,
                         ),
                       ),
