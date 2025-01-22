@@ -118,7 +118,7 @@ class _ItemCinema extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.red,
+            color: Colors.deepPurple,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -133,7 +133,7 @@ class _ItemCinema extends StatelessWidget {
                   width: 150,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.red,
+                      color: Colors.deepPurple,
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -185,7 +185,7 @@ class _ItemCinema extends StatelessWidget {
                       child: Container(
                         height: 35,
                         decoration: const BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.deepPurple,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(16),
                               bottomRight: Radius.circular(16)),

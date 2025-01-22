@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
+import 'package:projeto_cinema/infrastructure/ui/register_muvie.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/login_state.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/movie_state.dart';
 import 'package:projeto_cinema/infrastructure/util/text_form.dart';
@@ -22,39 +23,23 @@ class MovieScreen extends StatelessWidget {
         movieUseCase: Provider.of(context, listen: false),
       ),
       child: Consumer<MovieState>(builder: (_, state, __) {
-        return SizedBox(
-            height: 50,
-            child: _NavigatorBar());
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            centerTitle: true,
+            title: const Text(
+              'Filmes',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          body: const _ItemType(),
+        );
       }),
     );
-  }
-}
-
-class _NavigatorBar extends StatelessWidget {
-  const _NavigatorBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BottomNavigationBar(
-
-      items: [
-        BottomNavigationBarItem(
-
-          icon: Icon(Icons.movie_creation_outlined),
-          label: 'Filmes',
-          activeIcon: _ItemType(),
-
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.movie_creation_outlined),
-          label: 'Filmes'
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.movie_creation_outlined),
-          label: 'Filmes'
-        ),
-      ],
-        );
   }
 }
 
@@ -70,7 +55,7 @@ class _ItemType extends StatelessWidget {
         child: Column(
           children: [
             Lottie.asset(
-              'assets_app/lottie_animation/teste.json',
+              'assets_app/lottie_animation/animation_01.json',
             ),
             const Text(
               'Sem filmes para mostrar',
@@ -138,7 +123,7 @@ class _ItemType extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: Colors.grey[300],
                                     borderRadius: BorderRadius.circular(2),
-                                    border: Border.all(color: Colors.red)),
+                                    border: Border.all(color: Colors.deepPurple)),
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -149,7 +134,7 @@ class _ItemType extends StatelessWidget {
                                     Expanded(
                                       child: Container(
                                         decoration: const BoxDecoration(
-                                          color: Colors.red,
+                                          color: Colors.deepPurple,
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(8),
                                             topRight: Radius.circular(8),
@@ -194,171 +179,62 @@ class _ItemType extends StatelessWidget {
   }
 }
 
-class _ModalHours extends StatelessWidget {
-  const _ModalHours({super.key, required this.movie});
 
-  final Movie movie;
+
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+
+
+  final List<Widget> _screens = [
+   const  MovieScreen(),
+   const  MyTickets(),
+   const  RegisterMovie(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final state = Provider.of<MovieState>(context);
+    return Scaffold(
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.deepPurple,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.movie_creation_outlined),
+            label: 'Filmes',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_movies_outlined),
+            label: 'Ingreços',
+          ),
+          BottomNavigationBarItem(
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.circular(8.0),
-                border: const Border(
-                  top: BorderSide(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
-                        child: Text(
-                          'Horarios disponiveis',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                      bottom: 8.0,
-                    ),
-                    child: Text(
-                      'Descrição: ${movie.description}',
-                      maxLines: 2,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: 8.0,
-                      top: 16,
-                    ),
-                    child: Text(
-                      'Selecione um Horario Abaixo',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 54,
-                    child: ListView.builder(
-                      itemCount: movie.showTimes?.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        final time = movie.showTimes?[index];
-
-                        return InkWell(
-                          onTap: () {
-                            state.hours = time;
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 110,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: state.hours == time
-                                      ? Colors.white
-                                      : Colors.red,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  '$time horas',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: InkWell(
-                              onTap: () async {
-                                Navigator.pushNamed(
-                                  context,
-                                  'seat_selection',
-                                  arguments: DetailArguments(
-                                    movie: movie,
-                                    hours: state.hours ?? '',
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height: 35,
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(8),
-                                    bottomRight: Radius.circular(8),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Selecionar',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
+            icon: Icon(Icons.app_registration),
+            label: 'Cadastro de filmes',
           ),
         ],
       ),
     );
   }
 }
+
+
+
 
 class CategorySelector<T> extends StatefulWidget {
   final List<T> categories;
@@ -388,7 +264,7 @@ class _CategorySelectorState extends State<CategorySelector> {
       onPressed: () => _showCategorySelector(context),
       child: Text(
         widget.idCategory == null ? "Selecionar Categorias" : 'Mudar categoria',
-        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -449,7 +325,7 @@ class _CategorySelectorState extends State<CategorySelector> {
                       child: Container(
                         height: 40,
                         decoration: const BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.deepPurple,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8),

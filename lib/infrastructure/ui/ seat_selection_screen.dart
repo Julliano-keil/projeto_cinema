@@ -131,7 +131,7 @@ class _SelectPrice extends StatelessWidget {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: state.seat != null ? Colors.red : Colors.grey,
+                  color: state.seat != null ? Colors.deepPurple : Colors.grey,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8),
                     bottomRight: Radius.circular(8),

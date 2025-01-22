@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lottie/lottie.dart';
 import 'package:projeto_cinema/domain/entities/movie.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/my_tickets_state.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class MyTickets extends StatelessWidget {
       ),
       child: Consumer<MyTicketsState>(builder: (_, state, __) {
         return Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor:  Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
             centerTitle: true,
@@ -44,6 +45,26 @@ class ListMyTickets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<MyTicketsState>(context);
+
+    if(state.listMyTickets.isEmpty){
+      return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets_app/lottie_animation/Animation_02.json',
+              height: 250
+
+            ),
+            const Text(
+              'Sem ingreços para mostrar',
+              style: TextStyle(color: Colors.deepPurple),
+            ),
+          ],
+        ),
+      );
+    }
+
 
     return ListView.builder(
       itemCount: state.listMyTickets.length,
@@ -91,7 +112,7 @@ class _MyTicketsItem extends StatelessWidget {
                   },
             child: Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red),
+                  border: Border.all(color: Colors.deepPurple),
                   borderRadius: BorderRadius.circular(8)),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +183,7 @@ class _MyTicketsItem extends StatelessWidget {
             child: Transform.rotate(
               angle: pi / -5,
               child: Container(
-                color: Colors.red,
+                color: Colors.deepPurple,
                 child: const Padding(
                   padding: EdgeInsets.all(4.0),
                   child: Text(
@@ -198,7 +219,7 @@ class ModalReimbursement extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               border: const Border(
                 top: BorderSide(
-                  color: Colors.red,
+                  color: Colors.deepPurple,
                 ),
               ),
             ),
@@ -224,7 +245,7 @@ class ModalReimbursement extends StatelessWidget {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.red),
+                        border: Border.all(color: Colors.deepPurple),
                         borderRadius: BorderRadius.circular(8)),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +327,7 @@ class ModalReimbursement extends StatelessWidget {
                     child: Container(
                       height: 40,
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        color: Colors.deepPurple,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8),
                           bottomRight: Radius.circular(8),

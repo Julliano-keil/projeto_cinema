@@ -29,7 +29,7 @@ class Login extends StatelessWidget {
             routes: {
               '/': (context) => const LoginScreen(),
               'cinema': (context) => const CinemaScreen(),
-              'movie': (context) => const MovieScreen(),
+              'movie': (context) =>  const HomeScreen(),
               'seat_selection': (context) => const SeatSeScreen(),
               'my_tickets': (context) => const MyTickets(),
               'register_movie': (context) => const RegisterMovie(),
@@ -66,10 +66,10 @@ class LoginScreen extends StatelessWidget {
                       top: 120.0,
                     ),
                     child: Lottie.asset(
-                        'assets_app/lottie_animation/movie_login.json',
+                        'assets_app/lottie_animation/Animation_04.json',
                         reverse: true,
                         repeat: true,
-                        addRepaintBoundary: true),
+                        ),
                   ),
                 ),
                 Align(
@@ -85,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                         border: const Border(
                           top: BorderSide(
-                            color: Colors.red,
+                            color: Colors.deepPurple,
                           ),
                         ),
                       ),
@@ -168,7 +168,7 @@ class _FormAction extends StatelessWidget {
                     child: Container(
                       height: 35,
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        color: Colors.deepPurple,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             bottomRight: Radius.circular(8)),
@@ -201,7 +201,7 @@ class _FormAction extends StatelessWidget {
                       child: Container(
                         height: 35,
                         decoration: const BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.deepPurple,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
                               bottomRight: Radius.circular(8)),
@@ -335,7 +335,7 @@ class _FormUser extends StatelessWidget {
                         child: Container(
                           height: 35,
                           decoration: const BoxDecoration(
-                            color: Colors.red,
+                            color: Colors.deepPurple,
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(8),
                               bottomRight: Radius.circular(8),

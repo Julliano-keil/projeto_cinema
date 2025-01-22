@@ -139,7 +139,7 @@ class _InsertMovie extends StatelessWidget {
                 child: Container(
                   height: 40,
                   decoration: const BoxDecoration(
-                    color: Colors.red,
+                    color: Colors.deepPurple,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(8),
                       bottomRight: Radius.circular(8),

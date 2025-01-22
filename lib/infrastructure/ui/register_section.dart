@@ -13,7 +13,6 @@ class RegisterSection extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as DetailArguments;
 
     final movie = arguments.movie;
-    final hoursMovie = arguments.hours;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -47,7 +46,9 @@ class _Body extends StatelessWidget {
           movie: movie,
         ),
 
-        _PlaceListEmpty(),
+       // _PlaceListEmpty(),
+
+        _InsertSection(),
 
         //const _InsertSection()
       ],
@@ -69,16 +70,17 @@ class _PlaceListEmpty extends StatelessWidget {
               top: 120.0,
             ),
             child: Lottie.asset(
-              'assets_app/lottie_animation/teste.json',
+              'assets_app/lottie_animation/animation_01.json',
               repeat: true,
               addRepaintBoundary: true,
-
             ),
           ),
         ),
         const Text(
           'Nenhuma sessão cadastrada',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
+          color: Colors.deepPurple
+          ),
         )
       ],
     );
@@ -111,7 +113,7 @@ class _InfoMovie extends StatelessWidget {
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(2),
                   border: Border.all(
-                    color: Colors.red,
+                    color: Colors.deepPurple,
                   ),
                 ),
                 child: Image.asset(
@@ -167,7 +169,7 @@ class _InfoMovie extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: Colors.deepPurple,
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Padding(
@@ -255,12 +257,12 @@ class _ItemFilterDate extends StatelessWidget {
         children: [
           Text(
             'Terça',
-            style: TextStyle(color: Colors.white, fontSize: 24),
+            style: TextStyle(color: Colors.purpleAccent, fontSize: 24),
           ),
           Text(
             '23/10',
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.purpleAccent,
             ),
           )
         ],
