@@ -9,14 +9,14 @@ class Movie {
   final List<String>? showSeat;
 
   Movie({
-     this.id,
-     this.idType,
-     this.title,
-     this.description,
-     this.labelType,
-     this.showTimes,
-     this.showSeat,
-     this.date,
+    this.id,
+    this.idType,
+    this.title,
+    this.description,
+    this.labelType,
+    this.showTimes,
+    this.showSeat,
+    this.date,
   });
 }
 
@@ -63,7 +63,6 @@ class SelectPriceMovie {
   final String? movieName;
   final String? hours;
 
-
   /// Creates a new instance of [SelectPriceMovie] with updated values.
   /// If a property is not specified, it retains the current value.
   SelectPriceMovie copyWith({
@@ -83,7 +82,7 @@ class SelectPriceMovie {
       sectionId: sectionId ?? this.sectionId,
       type: type ?? this.type,
       price: price ?? this.price,
-      movieId:movieId ?? this.movieId,
+      movieId: movieId ?? this.movieId,
       reimbursement: reimbursement ?? this.reimbursement,
       movie: movie ?? this.movie,
       seat: seat ?? this.seat,
@@ -92,23 +91,37 @@ class SelectPriceMovie {
     );
   }
 }
-class SectionEntity {
 
+class SectionEntity {
   /// Properties
   final int? id;
-  final int idMovie;
-  final bool reserved ;
-  final String label;
-  final List<String> showTimes;
+  final int? idMovie;
+  final int? idRoom;
+  final bool? reserved;
+  final String? date;
 
   /// Constructor
   SectionEntity({
     this.id,
-    required this.idMovie,
-    required this.label,
-    required this.reserved,
-    required this.showTimes,
-  });
+    this.idMovie,
+    this.idRoom,
+    this.date,
+    this.reserved,
 
+  });
 }
 
+class Room {
+  final int? id;
+  final String? label;
+  final String? local;
+  final List<SectionEntity>? sections;
+
+  /// Constructor
+  Room({
+    this.id,
+    this.label,
+    this.local,
+    this.sections,
+  });
+}

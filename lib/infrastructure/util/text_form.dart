@@ -141,7 +141,7 @@ class TextFormFieldDefault extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: const BorderSide(
-                color: Colors.red,
+                color: Colors.deepPurple,
                 width: 2.0,
               ),
             ),

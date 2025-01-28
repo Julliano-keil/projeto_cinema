@@ -123,7 +123,8 @@ class _ItemType extends StatelessWidget {
                                 decoration: BoxDecoration(
                                     color: Colors.grey[300],
                                     borderRadius: BorderRadius.circular(2),
-                                    border: Border.all(color: Colors.deepPurple)),
+                                    border:
+                                        Border.all(color: Colors.deepPurple)),
                                 child: Column(
                                   children: [
                                     Image.asset(
@@ -179,9 +180,6 @@ class _ItemType extends StatelessWidget {
   }
 }
 
-
-
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -192,11 +190,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-
   final List<Widget> _screens = [
-   const  MovieScreen(),
-   const  MyTickets(),
-   const  RegisterMovie(),
+    const MovieScreen(),
+    const MyTickets(),
+    const RegisterMovie(),
   ];
 
   @override
@@ -223,7 +220,6 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Ingreços',
           ),
           BottomNavigationBarItem(
-
             icon: Icon(Icons.app_registration),
             label: 'Cadastro de filmes',
           ),
@@ -232,9 +228,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-
 
 class CategorySelector<T> extends StatefulWidget {
   final List<T> categories;
@@ -264,7 +257,8 @@ class _CategorySelectorState extends State<CategorySelector> {
       onPressed: () => _showCategorySelector(context),
       child: Text(
         widget.idCategory == null ? "Selecionar Categorias" : 'Mudar categoria',
-        style: const TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            color: Colors.deepPurple, fontWeight: FontWeight.bold),
       ),
     );
   }

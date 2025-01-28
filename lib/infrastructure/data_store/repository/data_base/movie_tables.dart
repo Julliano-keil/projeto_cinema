@@ -138,7 +138,7 @@ class TableSection {
 
   /// ID column 'id' (integer, primary key)
   ///
-  static const seatId = 'seat_id';
+  static const roomId = 'room_id';
 
   /// Label column 'label' (text)
   static const label = 'label';
@@ -149,11 +149,12 @@ class TableSection {
   /// DDL to create the [Type] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
-    $id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    $label        TEXT NOT NULL,
-    $label        TEXT NOT NULL,
-    $hours    TEXT NOT NULL DEFAULT '',
-    UNIQUE($label) 
+    $id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    $idMovie           INTEGER NOT NULL,
+    $roomId            INTEGER NOT NULL,
+    $label             TEXT NOT NULL,
+    $hours             TEXT NOT NULL DEFAULT '',
+    UNIQUE($id) 
   );
   ''';
 
@@ -161,8 +162,7 @@ class TableSection {
   static Map<String, dynamic> toMap(SectionEntity section) {
     return <String, dynamic>{
       id: section.id,
-      label: section.label,
-      hours: section.showTimes.join(','),
+      label: section.date,
     };
   }
 
@@ -226,11 +226,15 @@ class TableRoom{
   /// Label column 'label' (text)
   static const label = 'label';
 
+  /// Label column 'label' (text)
+  static const local = 'local';
+
   /// DDL to create the [Type] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
     $id         INTEGER PRIMARY KEY AUTOINCREMENT,
     $label      TEXT NOT NULL,
+    $local      TEXT NOT NULL,
     UNIQUE($id) 
   );
   ''';

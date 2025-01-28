@@ -1,8 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:projeto_cinema/infrastructure/ui/state/register_section_state.dart';
+import 'package:projeto_cinema/infrastructure/util/modal_defalt.dart';
+import 'package:provider/provider.dart';
 
 import '../../domain/entities/movie.dart';
+import '../util/snack_bar.dart';
+import '../util/text_form.dart';
+import 'movie_screen.dart';
 
 class RegisterSection extends StatelessWidget {
   const RegisterSection({super.key});
@@ -13,21 +21,159 @@ class RegisterSection extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as DetailArguments;
 
     final movie = arguments.movie;
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text(
-          'Visualizar sessões',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+    return ChangeNotifierProvider(
+      create: (context) => RegisterSectionState(
+        sectionUseCase: Provider.of(context, listen: false),
       ),
-      body: _Body(
-        movie: movie,
+      child: Consumer<RegisterSectionState>(
+        builder: (_, value, __) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            floatingActionButton: FloatingActionButton.extended(
+              label: const Text(
+                'Cadastrar sessõa',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: Colors.deepPurple,
+              onPressed: () {
+                modalDefault(
+                  context: context,
+                  maxHeight: 1000.0,
+                  widget: ChangeNotifierProvider.value(
+                    value: value,
+                    child: const _ModalRegisterSection(),
+                  ),
+                );
+              },
+            ),
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              centerTitle: true,
+              title: const Text(
+                'Visualizar sessões',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            body: _Body(
+              movie: movie,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ModalRegisterSection extends StatelessWidget {
+  const _ModalRegisterSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = Provider.of<RegisterSectionState>(context);
+
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormFieldDefault(
+              controller: state.controllerDate,
+              label: 'Dia de cartaz',
+              textInputFormatter: [MaskTextInputFormatter(mask: '##/##/####')],
+              keyboardType: TextInputType.datetime,
+              validator: (text) {
+                if (text != null && text.trim().isEmpty) {
+                  return 'O campo nao pode estar vazio';
+                }
+                return null;
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormFieldDefault(
+              controller: state.controllerDate,
+              label: 'Horario',
+              textInputFormatter: [MaskTextInputFormatter(mask: '##:##')],
+              keyboardType: TextInputType.number,
+              validator: (text) {
+                if (text != null && text.trim().isEmpty) {
+                  return 'O campo nao pode estar vazio';
+                }
+                return null;
+              },
+            ),
+          ),
+          CategorySelector(
+            idCategory: state.idRoom,
+            categories: state.listRoomSelect,
+            onSelectedCategories: (item) {
+              state.idRoom = item;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 22.0,
+            ),
+            child: InkWell(
+              onTap: () async {
+                if (!state.formKey.currentState!.validate()) {
+                  return;
+                }
+
+                if (state.idRoom == null) {
+                  FocusScope.of(context).unfocus();
+                  return snackBarDefault(
+                    context: context,
+                    severity: SnackBarSeverity.warning,
+                    message: 'Escolha uma categoria',
+                  );
+                }
+
+                if (context.mounted) {
+                  snackBarDefault(
+                    context: context,
+                    severity: SnackBarSeverity.success,
+                    message: 'Filme cadastrado com sucesso',
+                  );
+
+                  Navigator.pop(context);
+                }
+              },
+              child: Container(
+                height: 40,
+                decoration: const BoxDecoration(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                ),
+                child: const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Cadastrar filme',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -40,15 +186,33 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<RegisterSectionState>(context);
+
     return Column(
       children: [
         _InfoMovie(
           movie: movie,
         ),
 
-       // _PlaceListEmpty(),
+        if (state.listRoom.isEmpty) const _PlaceListEmpty(),
 
-        _InsertSection(),
+        if (state.listRoom.isNotEmpty) ...[
+          const _InsertSection(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: ListView.builder(
+                itemCount: state.listRoom.length,
+                itemBuilder: (context, index) {
+                  final room = state.listRoom[index];
+                  return _CardSection(
+                    room: room,
+                  );
+                },
+              ),
+            ),
+          )
+        ]
 
         //const _InsertSection()
       ],
@@ -78,9 +242,10 @@ class _PlaceListEmpty extends StatelessWidget {
         ),
         const Text(
           'Nenhuma sessão cadastrada',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
-          color: Colors.deepPurple
-          ),
+          style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurple),
         )
       ],
     );
@@ -214,6 +379,8 @@ class _InsertSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<RegisterSectionState>(context);
+
     return Column(
       children: [
         Row(
@@ -226,18 +393,111 @@ class _InsertSection extends StatelessWidget {
                 child: SizedBox(
                   height: 60,
                   child: ListView.builder(
-                    itemCount: 4,
+                    itemCount: state.listDateFilter.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return const _ItemFilterDate();
+                      final itemDate = state.listDateFilter[index];
+
+                      return _ItemFilterDate(
+                        dateFilter: itemDate,
+                      );
                     },
                   ),
                 ),
               ),
             )
           ],
-        )
+        ),
       ],
+    );
+  }
+}
+
+class _CardSection extends StatelessWidget {
+  const _CardSection({super.key, required this.room});
+
+  final Room room;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8), color: Colors.white10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8.0),
+                    child: Icon(
+                      Icons.movie_filter_outlined,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        room.label ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        room.local ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.start,
+                children: [
+                  for (final item in room.sections ?? <SectionEntity>[])
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 4.0,
+                        vertical: 4,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.purple),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6.0,
+                            horizontal: 12.0,
+                          ),
+                          child: Text(
+                            item.date ?? '',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -245,23 +505,30 @@ class _InsertSection extends StatelessWidget {
 class _ItemFilterDate extends StatelessWidget {
   const _ItemFilterDate({
     super.key,
+    required this.dateFilter,
   });
+
+  final DateTime dateFilter;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
+    var local = Intl.defaultLocale = 'pt_BR';
+
+    final weekDay = DateFormat('EEE', local).format(dateFilter);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Terça',
-            style: TextStyle(color: Colors.purpleAccent, fontSize: 24),
+            weekDay,
+            style: const TextStyle(color: Colors.purpleAccent, fontSize: 24),
           ),
           Text(
-            '23/10',
-            style: TextStyle(
+            DateFormat('dd/MM').format(dateFilter),
+            style: const TextStyle(
               color: Colors.purpleAccent,
             ),
           )

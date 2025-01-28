@@ -133,7 +133,6 @@ class _InsertMovie extends StatelessWidget {
                       message: 'Filme cadastrado com sucesso',
                     );
 
-                    Navigator.pop(context);
                   }
                 },
                 child: Container(

@@ -44,6 +44,30 @@ class MovieDataBase {
           prefs.setString(SharedPreferencesKeys.password,'@Teste123');
 
           await db.execute(TableMovie.createTable);
+          await db.execute(TableRoom.createTable);
+
+
+
+          db.insert(
+            TableRoom.tableName,
+            {
+              TableRoom.id: 1,
+              TableRoom.label: 'Norte shopping',
+              TableRoom.local: 'Rod BR-470- setor cinemas',
+
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
+          db.insert(
+            TableRoom.tableName,
+            {
+              TableRoom.id: 2,
+              TableRoom.label: 'Shopping cinema centro',
+              TableRoom.local: 'Cruzero BR-470- setor cinemas',
+
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
           await db.execute(TableType.createTable);
           db.insert(
             TableType.tableName,
@@ -53,6 +77,7 @@ class MovieDataBase {
             },
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
+
           db.insert(
             TableType.tableName,
             {
@@ -92,12 +117,25 @@ class MovieDataBase {
             logInfo('Upgrade to version 3', newVersion);
             await _upgradeToVersion3(db);
           }
+          if (oldVersion < 4) {
+            logInfo('Upgrade to version 4', newVersion);
+            await _upgradeToVersion4(db);
+          }
         } on Exception catch (e) {
           logInfo('Exception', e);
         }
       },
       version: _version,
     );
+  }
+
+  Future<void> _upgradeToVersion4(Database db) async {
+    try {
+      await db.execute(TableRoom.createTable);
+
+    } on Exception catch (e) {
+      logInfo('Exception', e);
+    }
   }
 
   Future<void> _upgradeToVersion3(Database db) async {
