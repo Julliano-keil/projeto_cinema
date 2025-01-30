@@ -43,14 +43,15 @@ void snackBarDefault({
       contentCrossAxisAlignment: CrossAxisAlignment.center,
     ),
     configuration: FlutterSnackBarConfiguration(
-      location: FlutterSnackBarLocation.bottom,
+      location: FlutterSnackBarLocation.top,
       distance: 35,
-      animationCurve: Curves.ease,
+      animationCurve: Curves.elasticInOut,
       animationDuration: const Duration(milliseconds: 500),
       showDuration: const Duration(seconds: 2),
       persistent: false,
       dismissible: true,
-      dismissDirection: DismissDirection.none,
+
+      dismissDirection: DismissDirection.horizontal,
       showLoadingBar: isLoading,
     ),
   );
@@ -74,7 +75,7 @@ enum SnackBarSeverity {
     return switch (this) {
       error => Colors.red,
       warning => Colors.orange.shade400,
-      success => Colors.green,
+      success => Colors.deepPurple,
     };
   }
 

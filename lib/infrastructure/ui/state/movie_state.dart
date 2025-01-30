@@ -39,7 +39,7 @@ class MovieState extends ChangeNotifier {
 
   String? _hours;
 
-   bool _isLoad = true;
+  bool _isLoad = true;
 
   bool get isLoad => _isLoad;
 
@@ -67,8 +67,9 @@ class MovieState extends ChangeNotifier {
     isAdm = (await _isAdm) ?? false;
     await getListMovie();
     await getListType();
-    Future.delayed( const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     _isLoad = false;
+    notifyListeners();
   }
 
   Future<void> getListType() async {

@@ -54,13 +54,12 @@ class _ItemType extends StatelessWidget {
     if (state.isLoad) {
       return Center(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
               'assets_app/lottie_animation/load.json',
-            ),
-            const Text(
-              'Sem filmes para mostrar',
-              style: TextStyle(color: Colors.white),
+
             ),
           ],
         ),
@@ -125,6 +124,7 @@ class _ItemType extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
+
                                 Navigator.pushNamed(
                                   context,
                                   'register_section',
@@ -182,7 +182,7 @@ class _ItemType extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
+                      ).animate1();
                     },
                   ),
                 ),

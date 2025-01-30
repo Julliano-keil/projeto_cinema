@@ -12,12 +12,19 @@ class MyTicketsState extends ChangeNotifier {
 
   final MovieUseCase _movieUseCase;
 
+  bool _isLoad = true;
+
+  bool get isLoad => _isLoad;
+
   final _listMyTickets = <SelectPriceMovie>[];
 
   List<SelectPriceMovie> get listMyTickets => _listMyTickets;
 
   Future<void> _init() async {
     await getMyTickets();
+    await Future.delayed(const Duration(seconds: 2));
+    _isLoad = false;
+    notifyListeners();
   }
 
   Future<void> getMyTickets() async {

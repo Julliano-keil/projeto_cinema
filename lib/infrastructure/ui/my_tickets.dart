@@ -20,7 +20,7 @@ class MyTickets extends StatelessWidget {
       ),
       child: Consumer<MyTicketsState>(builder: (_, state, __) {
         return Scaffold(
-          backgroundColor:  Colors.black,
+          backgroundColor: Colors.black,
           appBar: AppBar(
             backgroundColor: Colors.black,
             centerTitle: true,
@@ -46,16 +46,27 @@ class ListMyTickets extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = Provider.of<MyTicketsState>(context);
 
-    if(state.listMyTickets.isEmpty){
+    if (state.isLoad) {
+      return Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets_app/lottie_animation/load.json',
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (state.listMyTickets.isEmpty) {
       return Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Lottie.asset(
-              'assets_app/lottie_animation/Animation_02.json',
-              height: 250
-
-            ),
+            Lottie.asset('assets_app/lottie_animation/Animation_02.json',
+                height: 250),
             const Text(
               'Sem ingreços para mostrar',
               style: TextStyle(color: Colors.deepPurple),
@@ -64,7 +75,6 @@ class ListMyTickets extends StatelessWidget {
         ),
       );
     }
-
 
     return ListView.builder(
       itemCount: state.listMyTickets.length,
@@ -196,7 +206,7 @@ class _MyTicketsItem extends StatelessWidget {
             ),
           )
       ],
-    );
+    ).animate1();
   }
 }
 
@@ -312,15 +322,14 @@ class ModalReimbursement extends StatelessWidget {
                   ),
                   child: InkWell(
                     onTap: () async {
+                      await state.solicitationReimbursement(item);
+
+                      await state.getMyTickets();
                       snackBarDefault(
                         context: context,
                         severity: SnackBarSeverity.success,
                         message: 'O valor sera retornado em menos de 24 horas',
                       );
-
-                      await state.solicitationReimbursement(item);
-
-                      await state.getMyTickets();
 
                       Navigator.of(context).pop();
                     },
@@ -363,7 +372,7 @@ extension AnimateWidgetExtensions on Widget {
       autoPlay: true,
     ).slide(
       duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
+      curve: Curves.fastEaseInToSlowEaseOut,
       begin: const Offset(2, 0),
     );
   }
