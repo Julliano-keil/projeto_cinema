@@ -25,7 +25,7 @@ class MyTickets extends StatelessWidget {
             backgroundColor: Colors.black,
             centerTitle: true,
             title: const Text(
-              'Meus ingreços',
+              'Meus ingressos',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class ListMyTickets extends StatelessWidget {
             Lottie.asset('assets_app/lottie_animation/Animation_02.json',
                 height: 250),
             const Text(
-              'Sem ingreços para mostrar',
+              'Sem ingressos para mostrar',
               style: TextStyle(color: Colors.deepPurple),
             ),
           ],
@@ -239,7 +239,7 @@ class ModalReimbursement extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    'Solicitar reenbolso',
+                    'Solicitar reembolso',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -346,7 +346,7 @@ class ModalReimbursement extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Solicitar reenbolso de R\$${item.price}',
+                            'Solicitar reembolso de R\$${item.price}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,

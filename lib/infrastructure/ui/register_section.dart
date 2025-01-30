@@ -34,7 +34,7 @@ class RegisterSection extends StatelessWidget {
             backgroundColor: Colors.black,
             floatingActionButton: FloatingActionButton.extended(
               label: const Text(
-                'Cadastrar sessõa',
+                'Cadastrar sessão',
                 style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
@@ -152,7 +152,7 @@ class _ModalRegisterSection extends StatelessWidget {
                     snackBarDefault(
                       context: context,
                       severity: SnackBarSeverity.success,
-                      message: 'Sessao cadastrada com sucesso',
+                      message: 'Sessão cadastrada com sucesso',
                     );
 
                     Navigator.pop(context);

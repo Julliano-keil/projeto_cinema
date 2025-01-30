@@ -234,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_movies_outlined),
-            label: 'Ingreços',
+            label: 'Ingressos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.app_registration),
