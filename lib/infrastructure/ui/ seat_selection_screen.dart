@@ -17,7 +17,7 @@ class SeatSeScreen extends StatelessWidget {
         ModalRoute.of(context)!.settings.arguments as DetailArguments;
 
     final movie = arguments.movie;
-    final hoursMovie = arguments.hours;
+    final section = arguments.section;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -34,7 +34,7 @@ class SeatSeScreen extends StatelessWidget {
       ),
       body: _SelectSeat(
         movie: movie,
-        hoursMovie: hoursMovie,
+        sectionEntity: section,
       ),
     ).animate1();
   }
@@ -44,30 +44,30 @@ class _SelectSeat extends StatelessWidget {
   const _SelectSeat({
     super.key,
     required this.movie,
-    required this.hoursMovie,
+    required this.sectionEntity,
   });
 
   final Movie movie;
-  final String hoursMovie;
+  final SectionEntity sectionEntity;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SeatSelectionState>(
       create: (context) => SeatSelectionState(
           movieUseCase: Provider.of(context, listen: false),
-          hours: hoursMovie,
+          section: sectionEntity,
           movie: movie),
       child: Column(
         children: [
           _InfoMovie(
-            hoursMovie: hoursMovie,
+            hoursMovie: sectionEntity.hoursFormat ?? '',
             movie: movie,
           ),
           Column(
             children: [
               Center(
                 child: Text(
-                  'Selecionar acento : $hoursMovie',
+                  'Selecionar acento : ${sectionEntity.hoursFormat}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -175,7 +175,7 @@ class _ModalPrice extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               border: const Border(
                 top: BorderSide(
-                  color: Colors.red,
+                  color: Colors.deepPurple,
                 ),
               ),
             ),
@@ -204,6 +204,7 @@ class _ModalPrice extends StatelessWidget {
                         price: item.price ?? 0.0,
                         index: typeIndex,
                       );
+
                     },
                   ),
                 ),
@@ -220,7 +221,7 @@ class _ModalPrice extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8.0),
                               border: const Border(
                                 top: BorderSide(
-                                  color: Colors.red,
+                                  color: Colors.deepPurple,
                                 ),
                               ),
                             ),
@@ -240,7 +241,7 @@ class _ModalPrice extends StatelessWidget {
                                         horizontal: 16.0),
                                     child: InkWell(
                                       onTap: () async {
-                                        final pop = await _showPaymentDialog(
+                                        final pop = await _showPaymentSheet(
                                           context,
                                           state.selectPriceMovie,
                                           state,
@@ -256,7 +257,7 @@ class _ModalPrice extends StatelessWidget {
                                       child: Container(
                                         height: 35,
                                         decoration: const BoxDecoration(
-                                          color: Colors.red,
+                                          color: Colors.deepPurple,
                                           borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(8),
                                             bottomRight: Radius.circular(8),
@@ -295,127 +296,98 @@ class _ModalPrice extends StatelessWidget {
   }
 }
 
-Future<bool?> _showPaymentDialog(BuildContext context,
+Future<bool?> _showPaymentSheet(BuildContext context,
     SelectPriceMovie? selectPriceMovie, SeatSelectionState state) {
-  return showDialog<bool>(
+  return showModalBottomSheet<bool>(
     context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(color: Colors.red, width: 2), // Borda vermelha
-        ),
-        backgroundColor: Colors.black, // Fundo preto
-        title: Column(
+    isScrollControlled: true,
+    backgroundColor: Colors.black,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (BuildContext context23) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "Você tem um pagamento pendente",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            const SizedBox(height: 10),
+            _buildInfoRow("Tipo:", selectPriceMovie?.type),
+            _buildInfoRow("Total a pagar:", selectPriceMovie?.price),
+            _buildInfoRow("Local do assento:", selectPriceMovie?.seat),
+            _buildInfoRow("Filme:", selectPriceMovie?.movieName),
+            _buildInfoRow("Data:", selectPriceMovie?.hours),
+            const SizedBox(height: 20),
+            const Center(
+              child: Text(
+                "Escaneie para pagar",
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ),
-            Text(
-              "Tipo: ${selectPriceMovie?.type}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              "Total a pagar: ${selectPriceMovie?.price}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              "local de acento: ${selectPriceMovie?.seat}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              "Filme: ${selectPriceMovie?.movieName}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-            Text(
-              "Data: ${selectPriceMovie?.hours}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "Escaneie para pagar",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-              ),
-            ),
+            const SizedBox(height: 10),
             if (!(state.isLoad ?? false))
-              Image.network(
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1024px-QR_code_for_mobile_English_Wikipedia.svg.png',
-                // Link para uma imagem QR code de exemplo
-                height: 150,
-                width: 150,
-                color: Colors.white,
+              Center(
+                child: Image.network(
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1024px-QR_code_for_mobile_English_Wikipedia.svg.png',
+                  height: 150,
+                  width: 150,
+                  color: Colors.white,
+                ),
               ),
             if ((state.isLoad ?? false))
-              const CircularProgressIndicator(
-                color: Colors.red,
+              const Center(
+                child: CircularProgressIndicator(color: Colors.deepPurple),
               ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: InkWell(
-                onTap: () {
-                  state.insertTicket();
-
-                  snackBarDefault(
-                      context: context,
-                      severity: SnackBarSeverity.success,
-                      message: 'Pagamento efetuado com sucesso');
-
-                  Navigator.of(context).pop(true);
-                },
-                child: Container(
-                  height: 35,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Pagar',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              onPressed: () {
+                state.insertTicket();
+                snackBarDefault(
+                  context: context23,
+                  severity: SnackBarSeverity.success,
+                  message: 'Pagamento efetuado com sucesso',
+                );
+                Navigator.of(context23).pop(true);
+              },
+              child: const Center(
+                child: Text(
+                  'Pagar',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,
+                  color: Colors.white
                   ),
                 ),
               ),
-            )
+            ),
+            const SizedBox(height: 10),
           ],
         ),
       );
     },
   );
 }
+
+Widget _buildInfoRow(String label, dynamic value) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 5),
+    child: Text(
+      "$label $value",
+      style: const TextStyle(color: Colors.white, fontSize: 16),
+    ),
+  );
+}
+
 
 class _ItemSelectPrice extends StatelessWidget {
   const _ItemSelectPrice({
@@ -441,10 +413,11 @@ class _ItemSelectPrice extends StatelessWidget {
           state.selectPriceMovie = SelectPriceMovie(
             movieId: state.movie.id,
             movie: state.movie,
+            section:state.section,
             price: price,
             type: type,
             seat: state.seat,
-            hours: '${state.movie.date} as ${state.hours}',
+            hours: '${state.movie.date} as ${state.section.hoursFormat}',
             movieName: state.movie.title,
           );
         },
@@ -454,7 +427,7 @@ class _ItemSelectPrice extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.red,
+                  color: Colors.deepPurple,
                 ),
               ),
               child: Padding(
@@ -525,7 +498,7 @@ class _InfoColorsSelection extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Container(
-                    color: Colors.red,
+                    color: Colors.deepPurple,
                     height: 15,
                     width: 15,
                   ),
@@ -643,10 +616,14 @@ class SeatTile extends StatelessWidget {
     bool? isExistSeat = false;
     bool? isSelected = false;
 
-    for (final item in movie.showSeat ?? <String>[]) {
+    for (final item in state.listSeat ) {
       if (item.trim() == label.trim()) {
         isExistSeat = true;
       }
+    }
+
+    if (state.seat == label.trim()) {
+      isExistSeat = true;
     }
 
     if (state.seat != null) {
@@ -658,15 +635,15 @@ class SeatTile extends StatelessWidget {
     var color = (isExistSeat ?? false)
         ? (isSelected ?? false)
             ? Colors.blue
-            : Colors.grey[300]
-        : Colors.red;
+        : Colors.deepPurple
+            : Colors.grey[300];
 
     return InkWell(
-      onTap: (isExistSeat ?? false)
-          ? () {
+      onTap:  () {
               state.seat = label;
-            }
-          : null,
+              print(state.seat);
+            },
+
       child: Container(
         decoration: BoxDecoration(
           color: color,
@@ -768,7 +745,7 @@ class _InfoMovie extends StatelessWidget {
                     Expanded(
                       child: Container(
                         decoration: const BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.deepPurple,
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(8),
                             topRight: Radius.circular(8),

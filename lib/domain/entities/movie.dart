@@ -1,3 +1,5 @@
+import 'package:projeto_cinema/infrastructure/util/text_form.dart';
+
 class Movie {
   final int? id;
   final int? idType;
@@ -33,9 +35,9 @@ class TypeMovie {
 
 class DetailArguments {
   final Movie movie;
-  final String hours;
+  final SectionEntity section;
 
-  DetailArguments({required this.movie, required this.hours});
+  DetailArguments({required this.movie, required this.section});
 }
 
 class SelectPriceMovie {
@@ -49,12 +51,14 @@ class SelectPriceMovie {
     this.hours,
     this.movie,
     this.id,
-    this.sectionId,
+    this.seatId,
+    this.section,
   });
 
   final int? id;
   final int? movieId;
-  final int? sectionId;
+  final int? seatId;
+  final SectionEntity? section;
   final String? type;
   final double? price;
   final bool? reimbursement;
@@ -67,6 +71,7 @@ class SelectPriceMovie {
   /// If a property is not specified, it retains the current value.
   SelectPriceMovie copyWith({
     int? id,
+    int? seatId,
     String? type,
     double? price,
     bool? reimbursement,
@@ -75,11 +80,12 @@ class SelectPriceMovie {
     String? seat,
     String? movieName,
     String? hours,
-    int? sectionId,
+    SectionEntity? section,
   }) {
     return SelectPriceMovie(
       id: id ?? this.id,
-      sectionId: sectionId ?? this.sectionId,
+      seatId: seatId ?? this.seatId,
+      section: section ?? this.section,
       type: type ?? this.type,
       price: price ?? this.price,
       movieId: movieId ?? this.movieId,
@@ -107,8 +113,18 @@ class SectionEntity {
     this.idRoom,
     this.date,
     this.reserved,
-
   });
+
+  String? get hoursFormat {
+    final dateNotFormat = tryParseDate('dd/MM/yyyy HH:mm', date);
+
+    return tryFormatDate('HH:mm', dateNotFormat);
+  }
+
+  @override
+  String toString() {
+    return 'SectionEntity(id: $id, idMovie: $idMovie, idRoom: $idRoom, reserved: $reserved, date: $date, hoursFormat: $hoursFormat,)';
+  }
 }
 
 class Room {

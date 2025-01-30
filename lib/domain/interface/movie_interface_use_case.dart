@@ -10,8 +10,13 @@ abstract class MovieUseCase {
 
   /// insert Ticket
   Future<List<SelectPriceMovie>> getMyTickets();
+
+  /// get list string
+  Future<List<String>> getListSeat(SectionEntity section);
+
   ///  solicitation Reimbursement
   Future<void> solicitationReimbursement(SelectPriceMovie selectPriceMovie);
-/// insert movie
-  Future<void> insertMovie( Movie movie);
+
+  /// insert movie
+  Future<void> insertMovie(Movie movie);
 }

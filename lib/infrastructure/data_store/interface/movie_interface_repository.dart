@@ -15,4 +15,7 @@ abstract class MovieRepository {
   Future<void> solicitationReimbursement(SelectPriceMovie selectPriceMovie);
 
   Future<void> insertMovie( Movie movie);
+
+  /// get list string
+  Future<List<String>> getListSeat(SectionEntity section);
 }

@@ -91,10 +91,10 @@ class TableTicket {
   static const id = 'id';
 
   /// ID column 'id' (integer, primary key)
-  static const movieRelation = 'movie_relation';
+  static const idSeat = 'id_seat';
 
   /// Type column 'type' (text)
-  static const type = 'type';
+  static const idSection = 'id_section';
 
   /// Price column 'price' (real)
   static const price = 'price';
@@ -106,19 +106,20 @@ class TableTicket {
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
     $id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-    $type                 TEXT NOT NULL DEFAULT '',
     $price                INTEGER NOT NULL DEFAULT 0,
-    $movieRelation        INTEGER NOT NULL DEFAULT 0,
-    $reimbursement        INTEGER NOT NULL DEFAULT 0
+    $idSeat               INTEGER NOT NULL DEFAULT 0,
+    $idSection            INTEGER NOT NULL DEFAULT 0,
+    $reimbursement        INTEGER NOT NULL DEFAULT 0,
+    UNIQUE($id) 
   );
   ''';
 
   /// Convert a [Ticket] object into a Map
   static Map<String, dynamic> toMap(SelectPriceMovie ticket) {
     return <String, dynamic>{
-      type: ticket.type,
       price: ticket.price,
-      movieRelation: ticket.movieId,
+      idSection: ticket.section?.id,
+      idSeat: ticket.seatId,
       reimbursement: ticket.reimbursement,
     };
   }
@@ -140,9 +141,6 @@ class TableSection {
   ///
   static const roomId = 'room_id';
 
-  /// Label column 'label' (text)
-  static const label = 'label';
-
   /// Show times column 'show times' (text, stores JSON-encoded list of times)
   static const hours = 'hours';
 
@@ -152,7 +150,6 @@ class TableSection {
     $id                INTEGER PRIMARY KEY AUTOINCREMENT,
     $idMovie           INTEGER NOT NULL,
     $roomId            INTEGER NOT NULL,
-    $label             TEXT NOT NULL,
     $hours             TEXT NOT NULL DEFAULT '',
     UNIQUE($id) 
   );
@@ -162,21 +159,15 @@ class TableSection {
   static Map<String, dynamic> toMap(SectionEntity section) {
     return <String, dynamic>{
       id: section.id,
-      label: section.date,
+      hours: section.date
     };
   }
 
-  /// Convert a Map into a [TypeMovie] object
-  static TypeMovie fromMap(Map<String, dynamic> row) {
-    return TypeMovie(
-      id: row[id],
-      label: row[label],
-    );
-  }
 }
 
 /// Type table definitions
 class TableSeat {
+
   /// Table name 'seat'
   static const tableName = 'seat';
 
@@ -189,30 +180,20 @@ class TableSeat {
   /// Label column 'label' (text)
   static const label = 'label';
 
-  /// DDL to create the [Type] table
+  /// Label column 'label' (text)
+  static const statusCode = 'status_code';
+
+  /// DDL to create the [seat] table
   static const createTable = '''
   CREATE TABLE IF NOT EXISTS $tableName (
-    $id    INTEGER PRIMARY KEY AUTOINCREMENT,
-    $label TEXT NOT NULL,
-    UNIQUE($label) 
+    $id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    $label             TEXT NOT NULL,
+    $roomId            INTEGER NOT NULL,
+    $statusCode        INTEGER NOT NULL DEFAULT 0,
+    UNIQUE($id) 
   );
   ''';
 
-  /// Convert a [Type] object into a Map
-  static Map<String, dynamic> toMap(TypeMovie type) {
-    return <String, dynamic>{
-      id: type.id,
-      label: type.label,
-    };
-  }
-
-  /// Convert a Map into a [TypeMovie] object
-  static TypeMovie fromMap(Map<String, dynamic> row) {
-    return TypeMovie(
-      id: row[id],
-      label: row[label],
-    );
-  }
 }
 
 /// Type table definitions

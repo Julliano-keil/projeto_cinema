@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:intl/date_symbol_data_file.dart';
 import 'package:projeto_cinema/domain/interface/section_interface_use_case.dart';
 import 'package:projeto_cinema/domain/use_case/login_use_case.dart';
 import 'package:projeto_cinema/domain/use_case/section_use_case.dart';
@@ -10,7 +9,6 @@ import 'package:projeto_cinema/infrastructure/data_store/repository/section_repo
 import 'package:provider/provider.dart';
 
 import 'domain/interface/login_interface_use_case.dart';
-
 import 'domain/interface/movie_interface_use_case.dart';
 import 'domain/use_case/movie_use_case.dart';
 import 'infrastructure/data_store/repository/data_base/movie_data_base.dart';
@@ -73,15 +71,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: ThemeData.dark(),
       localizationsDelegates: const [
         GlobalWidgetsLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

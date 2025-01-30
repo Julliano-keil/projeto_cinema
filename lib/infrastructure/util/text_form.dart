@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+
+import 'app_log.dart';
 
 ///Default for the text form field
 class TextFormFieldDefault extends StatelessWidget {
@@ -179,5 +182,35 @@ class TextFormFieldDefault extends StatelessWidget {
 
       ),
     );
+  }
+}
+
+/// Try to parse the provided string as date with the provided format template.
+/// Returns null if the string can't be parsed as a date
+DateTime? tryParseDate(String template, String? date) {
+  if (date == null || date.isEmpty) {
+    return null;
+  }
+
+  try {
+    return DateFormat(template).parseStrict(date);
+  } on FormatException catch (e, stack) {
+    logInfo('Exception', e);
+    return null;
+  }
+}
+
+/// Try to format the provided date as string with the provided format template.
+/// Returns null if the date can't be parsed as a string
+String? tryFormatDate(String template, DateTime? date) {
+  if (date == null) {
+    return null;
+  }
+
+  try {
+    return DateFormat(template).format(date);
+  } on FormatException catch (e) {
+    logInfo('Exception', e);
+    return null;
   }
 }

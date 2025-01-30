@@ -34,4 +34,7 @@ class _MovieUseCase implements MovieUseCase {
 
   @override
   Future<void> insertMovie(Movie movie) => _repository.insertMovie(movie);
+
+  @override
+  Future<List<String>> getListSeat(SectionEntity section) => _repository.getListSeat(section);
 }

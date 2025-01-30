@@ -45,6 +45,9 @@ class MovieDataBase {
 
           await db.execute(TableMovie.createTable);
           await db.execute(TableRoom.createTable);
+          await db.execute(TableSection.createTable);
+          await db.execute(TableTicket.createTable);
+          await db.execute(TableSeat.createTable);
 
 
 
@@ -95,7 +98,7 @@ class MovieDataBase {
             },
             conflictAlgorithm: ConflictAlgorithm.replace,
           );
-          await db.execute(TableTicket.createTable);
+
         } on Exception catch (e) {
           logInfo('Exception', e);
         }

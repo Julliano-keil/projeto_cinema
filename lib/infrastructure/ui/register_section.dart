@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:projeto_cinema/infrastructure/ui/my_tickets.dart';
 import 'package:projeto_cinema/infrastructure/ui/state/register_section_state.dart';
+import 'package:projeto_cinema/infrastructure/util/app_log.dart';
 import 'package:projeto_cinema/infrastructure/util/modal_defalt.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,7 @@ class RegisterSection extends StatelessWidget {
     final movie = arguments.movie;
     return ChangeNotifierProvider(
       create: (context) => RegisterSectionState(
+        movie: movie,
         sectionUseCase: Provider.of(context, listen: false),
       ),
       child: Consumer<RegisterSectionState>(
@@ -80,100 +83,107 @@ class _ModalRegisterSection extends StatelessWidget {
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormFieldDefault(
-              controller: state.controllerDate,
-              label: 'Dia de cartaz',
-              textInputFormatter: [MaskTextInputFormatter(mask: '##/##/####')],
-              keyboardType: TextInputType.datetime,
-              validator: (text) {
-                if (text != null && text.trim().isEmpty) {
-                  return 'O campo nao pode estar vazio';
-                }
-                return null;
+      child: Form(
+        key: state.formKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormFieldDefault(
+                controller: state.controllerDate,
+                label: 'Dia de cartaz',
+                textInputFormatter: [
+                  MaskTextInputFormatter(mask: '##/##/####')
+                ],
+                keyboardType: TextInputType.datetime,
+                validator: (text) {
+                  if (text != null && text.trim().isEmpty) {
+                    return 'O campo nao pode estar vazio';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormFieldDefault(
+                controller: state.controllerHours,
+                label: 'Horario',
+                textInputFormatter: [MaskTextInputFormatter(mask: '##:## h')],
+                keyboardType: TextInputType.number,
+                validator: (text) {
+                  if (text != null && text.trim().isEmpty) {
+                    return 'O campo nao pode estar vazio';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            CategorySelector(
+              idCategory: state.idRoom,
+              categories: state.listRoomSelect,
+              onSelectedCategories: (item) {
+                state.idRoom = item;
               },
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormFieldDefault(
-              controller: state.controllerDate,
-              label: 'Horario',
-              textInputFormatter: [MaskTextInputFormatter(mask: '##:##')],
-              keyboardType: TextInputType.number,
-              validator: (text) {
-                if (text != null && text.trim().isEmpty) {
-                  return 'O campo nao pode estar vazio';
-                }
-                return null;
-              },
-            ),
-          ),
-          CategorySelector(
-            idCategory: state.idRoom,
-            categories: state.listRoomSelect,
-            onSelectedCategories: (item) {
-              state.idRoom = item;
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 22.0,
-            ),
-            child: InkWell(
-              onTap: () async {
-                if (!state.formKey.currentState!.validate()) {
-                  return;
-                }
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 22.0,
+              ),
+              child: InkWell(
+                onTap: () async {
+                  if (!state.formKey.currentState!.validate()) {
+                    return;
+                  }
 
-                if (state.idRoom == null) {
-                  FocusScope.of(context).unfocus();
-                  return snackBarDefault(
-                    context: context,
-                    severity: SnackBarSeverity.warning,
-                    message: 'Escolha uma categoria',
-                  );
-                }
+                  if (state.idRoom == null) {
+                    FocusScope.of(context).unfocus();
+                    return snackBarDefault(
+                      context: context,
+                      severity: SnackBarSeverity.warning,
+                      message: 'Escolha uma sala',
+                    );
+                  }
 
-                if (context.mounted) {
-                  snackBarDefault(
-                    context: context,
-                    severity: SnackBarSeverity.success,
-                    message: 'Filme cadastrado com sucesso',
-                  );
+                  await state.insertSection();
 
-                  Navigator.pop(context);
-                }
-              },
-              child: Container(
-                height: 40,
-                decoration: const BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8),
+                  if (context.mounted) {
+                    snackBarDefault(
+                      context: context,
+                      severity: SnackBarSeverity.success,
+                      message: 'Sessao cadastrada com sucesso',
+                    );
+
+                    Navigator.pop(context);
+                  }
+                },
+                child: Container(
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
                   ),
-                ),
-                child: const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      'Cadastrar filme',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                  child: const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        'Cadastrar filme',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -188,16 +198,20 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = Provider.of<RegisterSectionState>(context);
 
+    var validate = (state.listRoom.any(
+      (element) => element.sections!.isNotEmpty,
+    ));
+
     return Column(
       children: [
         _InfoMovie(
           movie: movie,
         ),
+        if (state.listDateFilter.isNotEmpty) const _InsertSection(),
 
-        if (state.listRoom.isEmpty) const _PlaceListEmpty(),
+        if (!validate) const _PlaceListEmpty(),
 
-        if (state.listRoom.isNotEmpty) ...[
-          const _InsertSection(),
+        if (validate)...[
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -205,9 +219,13 @@ class _Body extends StatelessWidget {
                 itemCount: state.listRoom.length,
                 itemBuilder: (context, index) {
                   final room = state.listRoom[index];
-                  return _CardSection(
-                    room: room,
-                  );
+
+                  if (room.sections?.isNotEmpty ?? false) {
+                    return _CardSection(
+                      room: room,
+                    ).animate2();
+                  }
+                  return const SizedBox.shrink();
                 },
               ),
             ),
@@ -420,6 +438,8 @@ class _CardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<RegisterSectionState>(context);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -469,25 +489,37 @@ class _CardSection extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.start,
                 children: [
                   for (final item in room.sections ?? <SectionEntity>[])
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4.0,
-                        vertical: 4,
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.purple),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 6.0,
-                            horizontal: 12.0,
-                          ),
-                          child: Text(
-                            item.date ?? '',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(
+                          'seat_selection',
+                              arguments: DetailArguments(
+                                movie: state.movie,
+                                section: item,
+                              )
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4.0,
+                          vertical: 4,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.purple),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 6.0,
+                              horizontal: 12.0,
+                            ),
+                            child: Text(
+                              item.hoursFormat ?? '',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
@@ -512,27 +544,37 @@ class _ItemFilterDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<RegisterSectionState>(context);
+
     var local = Intl.defaultLocale = 'pt_BR';
 
     final weekDay = DateFormat('EEE', local).format(dateFilter);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            weekDay,
-            style: const TextStyle(color: Colors.purpleAccent, fontSize: 24),
-          ),
-          Text(
-            DateFormat('dd/MM').format(dateFilter),
-            style: const TextStyle(
-              color: Colors.purpleAccent,
+    final validateColor = state.selectDate == dateFilter;
+
+    return InkWell(
+      onTap: () {
+        state.selectDate = dateFilter;
+        state.setDateFilter(dateFilter);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              weekDay,
+              style: TextStyle(color:validateColor ?  Colors.purpleAccent :Colors.purple , fontSize: 24),
             ),
-          )
-        ],
+            Text(
+              DateFormat('dd/MM').format(dateFilter),
+              style:  TextStyle(
+                color: validateColor ?  Colors.purpleAccent :Colors.purple,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

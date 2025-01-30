@@ -315,7 +315,11 @@ class _FormUser extends StatelessWidget {
                             final logUser = await state.logUser();
 
                             if (logUser && context.mounted) {
-                              Navigator.pushNamed(context, 'movie');
+                              Navigator.of(context)
+                                  .pushNamedAndRemoveUntil(
+                                'movie',
+                                    (route) => false,
+                              );
                               return;
                             } else {
                               if (context.mounted) {

@@ -7,9 +7,9 @@ class SeatSelectionState extends ChangeNotifier {
   SeatSelectionState({
     required MovieUseCase movieUseCase,
     required Movie movie,
-    required String hours,
+    required SectionEntity section,
   })  : _movieUseCase = movieUseCase,
-        _hours = hours,
+        _section = section,
         _movie = movie {
     _init();
   }
@@ -18,8 +18,11 @@ class SeatSelectionState extends ChangeNotifier {
 
   final Movie _movie;
 
-  final String _hours;
+  final SectionEntity _section;
 
+  final _listSeat = <String>[];
+
+  List<String> get listSeat => _listSeat;
   bool? _isLoad;
 
   String? _seat;
@@ -41,7 +44,7 @@ class SeatSelectionState extends ChangeNotifier {
 
   Movie get movie => _movie;
 
-  String get hours => _hours;
+  SectionEntity get section => _section;
 
   set seat(String? value) {
     _seat = value;
@@ -58,7 +61,8 @@ class SeatSelectionState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _init() {
+  void _init()async {
+   await  getListSection();
     _selectPriceList
       ..clear()
       ..addAll([
@@ -67,6 +71,14 @@ class SeatSelectionState extends ChangeNotifier {
         SelectPriceMovie(price: 15.95, type: '50% de desconto lince tech'),
         SelectPriceMovie(price: 25.55, type: 'Convenio Santo andre'),
       ]);
+  }
+
+  Future<void> getListSection()async{
+
+    final list = await _movieUseCase.getListSeat(_section);
+    listSeat..clear()..addAll(list);
+    notifyListeners();
+
   }
 
   Future<void> insertTicket() async {

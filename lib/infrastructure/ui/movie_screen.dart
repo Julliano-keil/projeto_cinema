@@ -50,6 +50,23 @@ class _ItemType extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = Provider.of<MovieState>(context);
 
+
+    if (state.isLoad) {
+      return Center(
+        child: Column(
+          children: [
+            Lottie.asset(
+              'assets_app/lottie_animation/load.json',
+            ),
+            const Text(
+              'Sem filmes para mostrar',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (state.listMovie.isEmpty) {
       return Center(
         child: Column(
@@ -113,7 +130,7 @@ class _ItemType extends StatelessWidget {
                                   'register_section',
                                   arguments: DetailArguments(
                                     movie: movie,
-                                    hours: state.hours ?? '',
+                                 section: SectionEntity()
                                   ),
                                 );
                               },

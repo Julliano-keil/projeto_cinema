@@ -89,29 +89,30 @@ class _MovieRepository implements MovieRepository {
   Future<void> insertTicket(SelectPriceMovie? selectPriceMovie) async {
     final db = await _movieData.getDatabase();
 
-    final listStr = <String>[];
 
-    final list = (selectPriceMovie?.movie?.showSeat ?? <String>[]);
 
-    list.remove(selectPriceMovie?.seat);
 
-    listStr.addAll(list);
+logInfo('ÇÇÇÇÇ',selectPriceMovie?.section.toString());
 
-    final string = listStr.join(',');
+   final idSeat = await db.insert(
+        TableSeat.tableName,
+        {
+          TableSeat.roomId:selectPriceMovie?.section?.idRoom,
+          TableSeat.label:selectPriceMovie?.seat?.trim(),
 
-    // db.update(
-    //     TableMovie.tableName,
-    //     {
-    //       TableMovie.showSeat: string,
-    //     },
-    //     where: '${TableMovie.id} = ?',
-    //     whereArgs: [selectPriceMovie?.movie?.id],
-    //     conflictAlgorithm: ConflictAlgorithm.replace);
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace);
 
-    db.insert(
+
+
+
+
+    await db.insert(
         TableTicket.tableName,
         TableTicket.toMap(
-          selectPriceMovie ?? SelectPriceMovie(),
+          selectPriceMovie?.copyWith(
+            seatId:idSeat ,
+          ) ?? SelectPriceMovie(),
         ),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -121,11 +122,20 @@ class _MovieRepository implements MovieRepository {
     final db = await _movieData.getDatabase();
 
     var query = '''
-    SELECT ${TableTicket.id} as id,
-    ${TableTicket.price} as price,
-    ${TableTicket.reimbursement} as reimbursement,
-    ${TableTicket.type} as type
-    FROM ${TableTicket.tableName} 
+    SELECT t.${TableTicket.id}         as id,
+           t.${TableTicket.price}      as price,
+           t.${TableTicket.idSeat}     as id_seat,
+           s.${TableSeat.label}        as label_seat,
+           m.${TableMovie.title}       as movie_name,
+           m.${TableMovie.id}          as id_movie,
+           sc.${TableSection.hours}    as hours,
+           tt.${TableType.label}       as type_movie,
+           t.${TableTicket.reimbursement} as reimbursement
+    FROM ${TableTicket.tableName} t  
+    LEFT JOIN ${TableSeat.tableName} s ON t.${TableTicket.idSeat} = s.${TableSeat.id}
+    LEFT JOIN ${TableSection.tableName} sc ON t.${TableTicket.idSection} = sc.${TableSection.id}
+    LEFT JOIN ${TableMovie.tableName} m ON sc.${TableSection.idMovie} = m.${TableMovie.id}
+    LEFT JOIN ${TableType.tableName} tt ON m.${TableMovie.typeId} = tt.${TableType.id}
     ''';
 
     final result = await db.rawQuery(query);
@@ -138,13 +148,14 @@ class _MovieRepository implements MovieRepository {
       listMyTickets.add(
         SelectPriceMovie(
           id: item['id'] as int,
-          movieId: item['movie_id'] as int,
-          type: item['type'] as String,
+          movieId: item['id_movie'] as int,
+          type: item['type_movie'] as String,
           price: double.parse(price),
           reimbursement: item['reimbursement'] == 1,
           movieName: item['movie_name'] as String,
           hours: item['hours'] as String,
-          seat: item['seat'] as String,
+          seatId: item['id_seat'] as int,
+          seat: item['label_seat'] as String?,
         ),
       );
     }
@@ -167,50 +178,19 @@ class _MovieRepository implements MovieRepository {
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    var query = '''
-    SELECT ${TableMovie.id}            as id,
-    FROM ${TableMovie.tableName} 
-    INNER JOIN ${TableMovie.id}  =  ${TableSection.idMovie} 
-    WHERE ${TableMovie.id} = ${selectPriceMovie.movieId};
-    ''';
+    await db.update(
+      TableSeat.tableName,
+      {
+        TableSeat.statusCode: 1,
+      },
+      where: '${TableSeat.id} IN (SELECT id FROM ${TableSeat.tableName} WHERE ${TableSeat.label} = ? AND ${TableSeat.roomId} = ?)',
+      whereArgs: [selectPriceMovie.seat, selectPriceMovie.movieId],
+    );
 
-    final result = await db.rawQuery(query);
 
-    final listMovie = <Movie>[];
 
-    for (final item in result) {
-      final listString = item['show_times'] as String;
-      final listSeat = item['seat'] as String;
 
-      listMovie.add(
-        Movie(
-          id: item['id'] as int,
-          showTimes: listString.split(','),
-          showSeat: listSeat.split(','),
-        ),
-      );
-    }
 
-    var string;
-
-    for (final (index, item) in listMovie.indexed) {
-      final listStr = <String>[];
-
-      final list = (item.showSeat);
-
-      list?.insert(index, selectPriceMovie.seat ?? '');
-
-      listStr.addAll(list ?? []);
-
-      string = listStr.join(',');
-    }
-    db.update(
-        TableMovie.tableName,
-        {
-        },
-        where: '${TableMovie.id} = ?',
-        whereArgs: [selectPriceMovie.movieId],
-        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   @override
@@ -231,5 +211,31 @@ class _MovieRepository implements MovieRepository {
     } on Exception catch (e) {
       logInfo('Error in insert movie', e);
     }
+  }
+
+  @override
+  Future<List<String>> getListSeat(SectionEntity section) async{
+    final db = await _movieData.getDatabase();
+
+    var query = '''
+    SELECT s.${TableSeat.id} as id,
+           s.${TableSeat.label}     as label
+    FROM ${TableSeat.tableName} s
+     LEFT JOIN ${TableSection.tableName} sc ON ${section.id} = sc.${TableSection.id}
+    LEFT JOIN ${TableMovie.tableName} m ON sc.${TableSection.idMovie} = m.${TableMovie.id}
+    WHERE s.${TableSeat.roomId} = ${section.idMovie} AND sc.${TableSection.id} = ${section.id}    
+    AND   s.${TableSeat.statusCode} != 1 
+    ''';
+
+    final result = await db.rawQuery(query);
+
+    final listSection = <String>[];
+    for (final item in result) {
+      listSection.add(
+       item['label'] as String,
+      );
+    }
+
+    return listSection;
   }
 }
